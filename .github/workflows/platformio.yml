@@ -1,0 +1,24 @@
+# This workflow will install platformio and check the project builds for an arduino
+# FOr more information see: https://docs.platformio.org/en/latest/integration/ci/github-actions.html
+
+name: Platformio arduino application
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
+    - name: Run PlatformIO
+      run: pio run
