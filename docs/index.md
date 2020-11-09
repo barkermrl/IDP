@@ -1,5 +1,5 @@
 ## Flowchart
-![Flowchart](https://github.com/barkermrl/IDP/Flowchart.png)
+![Flowchart](./Flowchart.png)
 
 ## Welcome to GitHub Pages
 
