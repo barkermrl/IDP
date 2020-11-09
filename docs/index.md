@@ -1,5 +1,5 @@
 ## Flowchart
-![Flowchart](../Flowchart.png)
+![Flowchart](/Flowchart.png)
 
 ## Welcome to GitHub Pages
 
