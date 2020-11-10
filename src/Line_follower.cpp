@@ -44,7 +44,7 @@ void loop(){
 
     // loop to find averages of the lists
     double av[3] = {0,0,0};
-    for(int i = 0; i <= 10; i++){
+    for(int i = 0; i < 10; i++){
         av[0] += avg1[i];
         av[1] += avg2[i];
         av[2] += avg3[i];

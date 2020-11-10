@@ -3,6 +3,7 @@
 #include <Adafruit_MotorShield.h>
 #include "misc_func.h"
 
+
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 // Or, create it with a different I2C address (say for stacking)
@@ -35,16 +36,23 @@ void setup() {
 
 void loop(){
     //this algorithm tries to make the robot follow the line by oscillating along it. The advantage is that it only uses 1 sensor, leaving 3 for detecting junctions and targets
-    if (digitalRead(ls2) == LOW){
-        M2 -> setSpeed(150 + kw*dir);
-        M1 -> setSpeed(150 - kw*dir);
-        change = true;
+    if (digitalRead(ls2) == LOW && change == false){
+        delay(50);
+        if (digitalRead(ls2) == LOW){ //to make sure the "low" reading isnt a sudden random drop
+            M2 -> setSpeed(150 + kw*dir);
+            M1 -> setSpeed(150 - kw*dir);
+            change = true;
+        }
     }
-    else if(change == true){
-        dir = -1*dir;
-        M2 -> setSpeed(150 + kw*dir);
-        M1 -> setSpeed(150 - kw*dir);
-        change = false;
+    if(digitalRead(ls2) == HIGH && change == true){
+        delay(50);
+        if (digitalRead(ls2) == HIGH){ //to make sure the "high" reading isnt a sudden random spike
+            dir = -1*dir;
+            M2 -> setSpeed(150 + kw*dir);
+            M1 -> setSpeed(150 - kw*dir);
+            change = false;
+            delay(50);
+        }
     }
     
 }
