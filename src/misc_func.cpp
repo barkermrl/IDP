@@ -129,6 +129,5 @@ void lineFollower_3switch(){
     //change motor powers
     M2 -> setSpeed(150 - K);
     M1 -> setSpeed(150 + K);
-    delay(100);
-    
+    delay(100);  
 }
