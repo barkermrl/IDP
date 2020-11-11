@@ -1,14 +1,10 @@
-#ifdef SPIN_180
-
 #include <Arduino.h>
-#include <Wire.h>
-#include "misc_func.h"
 #include "variables.h"
 
-void setup()
+void setup_spin_180()
 {
     Serial.begin(9600); // set up Serial library at 9600 bps
-    Serial.println("Adafruit Motorshield v2 - DC Motor test!");
+    Serial.println("Testing serial monitor");
     AFMS.begin(); // create with the default frequency 1.6KHz
 
     pinMode(ls1, INPUT); //left
@@ -19,7 +15,7 @@ void setup()
     M2->run(FORWARD);
 }
 
-void loop()
+void spin_180()
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
     if (digitalRead(ls2) == LOW)
@@ -46,5 +42,3 @@ void loop()
         }
     }
 }
-
-#endif

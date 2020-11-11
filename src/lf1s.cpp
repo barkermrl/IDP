@@ -1,11 +1,7 @@
-#if LINE_FOLLOWER_SINGLE_SWITCH
-
 #include <Arduino.h>
-#include <Wire.h>
-#include "misc_func.h"
 #include "variables.h"
 
-void setup()
+void setup_lf1s()
 {
     Serial.begin(9600); // set up Serial library at 9600 bps
     Serial.println("Adafruit Motorshield v2 - DC Motor test!");
@@ -22,7 +18,7 @@ void setup()
     M1->setSpeed(150 - kw * dir);
 }
 
-void loop()
+void lf1s()
 {
     //Single swtich
     if (digitalRead(ls2) == LOW && change == false)
@@ -48,5 +44,3 @@ void loop()
         }
     }
 }
-
-#endif
