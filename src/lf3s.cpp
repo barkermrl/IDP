@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "variables.h"
+#include "electronics.h"
 
 //Function to update the lists avg1,avg2,avg3 by deleting the oldest value on one end and inserting the newest value on the other
 void shft(double *svg, int len, double IN)
@@ -15,7 +16,7 @@ void shft(double *svg, int len, double IN)
 void update(double *svg1, double *svg2, double *svg3, int len)
 {
 
-  if (digitalRead(ls1) == HIGH)
+  if (leftOnLine())
   {
     shft(&svg1[0], 10, 1);
   }
@@ -23,7 +24,7 @@ void update(double *svg1, double *svg2, double *svg3, int len)
   {
     shft(&svg1[0], 10, 0);
   }
-  if (digitalRead(ls2) == HIGH)
+  if (centerOnLine())
   {
     shft(&svg2[0], 10, 1);
   }
@@ -31,7 +32,7 @@ void update(double *svg1, double *svg2, double *svg3, int len)
   {
     shft(&svg2[0], 10, 0);
   }
-  if (digitalRead(ls3) == HIGH)
+  if (rightOnLine())
   {
     shft(&svg2[0], 10, 1);
   }
@@ -39,23 +40,6 @@ void update(double *svg1, double *svg2, double *svg3, int len)
   {
     shft(&svg2[0], 10, 0);
   }
-}
-
-void setup_lf3s()
-{
-    Serial.begin(9600); // set up Serial library at 9600 bps
-    Serial.println("Adafruit Motorshield v2 - DC Motor test!");
-    AFMS.begin(); // create with the default frequency 1.6KHz
-
-    pinMode(ls1, INPUT); //left
-    pinMode(ls2, INPUT); //centre
-    pinMode(ls3, INPUT); //right
-
-    M1->run(FORWARD);
-    M2->run(FORWARD);
-
-    M2->setSpeed(150);
-    M1->setSpeed(150);
 }
 
 void lf3s()
@@ -82,7 +66,7 @@ void lf3s()
     double K = kp * e;
 
     //change motor powers
-    M2->setSpeed(150 - K);
-    M1->setSpeed(150 + K);
+    ML->setSpeed(150 - K);
+    MR->setSpeed(150 + K);
     delay(100);
 }

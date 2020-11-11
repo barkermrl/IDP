@@ -1,30 +1,17 @@
 #include <Arduino.h>
 #include "variables.h"
-
-void setup_spin_180()
-{
-    Serial.begin(9600); // set up Serial library at 9600 bps
-    Serial.println("Testing serial monitor");
-    AFMS.begin(); // create with the default frequency 1.6KHz
-
-    pinMode(ls1, INPUT); //left
-    pinMode(ls2, INPUT); //centre
-    pinMode(ls3, INPUT); //right
-
-    M1->run(FORWARD);
-    M2->run(FORWARD);
-}
+#include "electronics.h"
 
 void spin_180()
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
-    if (digitalRead(ls2) == LOW)
+    if (!centerOnLine())
     {
-        M1->run(FORWARD);
-        M2->run(BACKWARD);
-        M1->setSpeed(150);
-        M2->setSpeed(150);
-        while (digitalRead(ls2) == LOW)
+        MR->run(FORWARD);
+        ML->run(BACKWARD);
+        MR->setSpeed(power);
+        ML->setSpeed(power);
+        while (!centerOnLine())
         {
             delay(100);
         }
@@ -32,12 +19,12 @@ void spin_180()
     bool x = true;
     while (x == true)
     {
-        if (digitalRead(ls2) == LOW)
+        if (centerOnLine)
         {
-            M1->run(FORWARD);
-            M2->run(FORWARD);
-            M1->setSpeed(150);
-            M2->setSpeed(150);
+            MR->run(FORWARD);
+            ML->run(FORWARD);
+            MR->setSpeed(power);
+            ML->setSpeed(power);
             x = false;
         }
     }
