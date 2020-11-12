@@ -7,6 +7,8 @@ extern Adafruit_MotorShield AFMS;
 extern Adafruit_DCMotor *ML; //Left
 extern Adafruit_DCMotor *MR; //Right
 
+int8_t INT_init();
+
 void electronics_setup();
 bool leftOnLine();
 bool centerOnLine();
