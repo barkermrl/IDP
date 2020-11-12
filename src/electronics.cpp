@@ -4,9 +4,9 @@
 #include "electronics.h"
 
 // Variables for sensors
-#define ls1 6 //Left sensor
-#define ls2 7 //Middle sensor
-#define ls3 8 //Right sensor
+#define lsl 6 //Left sensor
+#define lsm 7 //Middle sensor
+#define lsr 6 //Right sensor
 
 //Defining Motors:
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -15,21 +15,21 @@ Adafruit_DCMotor *MR = AFMS.getMotor(1); //Right
 
 void electronics_setup()
 {
-    pinMode(ls1, INPUT); //left
-    pinMode(ls2, INPUT); //centre
-    pinMode(ls3, INPUT); //right
+    pinMode(lsl, INPUT); //left
+    pinMode(lsm, INPUT); //centre
+    pinMode(lsr, INPUT); //right
 
     pinMode(LED_BUILTIN, OUTPUT); //builtin LED
 }
 
 bool leftOnLine() {
-    return (digitalRead(ls1) == LOW);
+    return (digitalRead(lsl) == HIGH);
 }
 
 bool centerOnLine() {
-    return (digitalRead(ls2) == LOW);
+    return (digitalRead(lsm) == HIGH);
 }
 
 bool rightOnLine() {
-    return (digitalRead(ls3) == LOW);
+    return (digitalRead(lsr) == HIGH);
 }
