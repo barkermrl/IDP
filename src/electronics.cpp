@@ -12,7 +12,7 @@
 ISR(ISR_VECT)
 {
 	/* Insert your PORTA interrupt handling code here */
-    // do something //
+	 // do something //
 	/* Clear interrupt flags ** FIXED PORT WARN */
 	ISR_PORT.INTFLAGS = (1 << ISR_PIN);
 }
@@ -33,7 +33,7 @@ int8_t INT_init()
     
     /* IO Line */
 	// <y> Pin direction 
-    ISR_PORT.DIRCLR (1<< ISR_PIN);
+    	ISR_PORT.DIRCLR = (1<< ISR_PIN);
 	// <y> Initial level
 	//INT1_set_level(false);
 	// <y> Pull configuration
@@ -43,7 +43,7 @@ int8_t INT_init()
 	// <y> Pin Input/Sense Configuration
 	ISR_PORT.PIN0CTRL = (1 << 3) | (0x1); // PUEN / BOTHEDGE
 
-	ENABLE_INTERRUPTS();
+	sei();
 	return 0;
 }
 
