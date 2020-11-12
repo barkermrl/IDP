@@ -1,0 +1,36 @@
+#include <Arduino.h>
+#include "lf3s.h"
+#include "lf1s.h"
+#include "spin_180.h"
+#include "variables.h"
+#include "electronics.h"
+
+int kp = 50; //proportional coeff for control using running averages
+int kw = 50; //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
+int power = 100; // average speed of motors
+
+//Variables for the single sensor line follower:
+int dir = 1; //1 corresponds to left, -1 to right
+bool change = true; //Whether or not the robot should change directions when hitting the black
+
+//Variables for the 3 sensor line follower:
+double avg1[10] = {1,1,1,1,1,1,1,1,1,1}; // last 10 inputs of the line sensors. The averages will be calculated from these functions
+double avg2[10] = {0,0,0,0,0,0,0,0,0,0};
+double avg3[10] = {1,1,1,1,1,1,1,1,1,1};
+
+void setup()
+{
+    Serial.begin(9600); // set up Serial library at 9600 bps
+    Serial.println("Autobots, transform and roll out!");
+    AFMS.begin(); // create with the default frequency 1.6KHz
+
+    MR->run(FORWARD);
+    ML->run(FORWARD);
+}
+
+void loop()
+{
+    lf3s();
+    lf1s();
+    spin_180();
+}
