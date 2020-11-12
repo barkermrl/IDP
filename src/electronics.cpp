@@ -7,6 +7,8 @@
 #define lsl 6 //Left sensor
 #define lsm 7 //Middle sensor
 #define lsr 6 //Right sensor
+#define srange A0 // Long range sensor
+#define lrange A1 // Short range sensor
 
 //Defining Motors:
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -32,4 +34,12 @@ bool centerOnLine() {
 
 bool rightOnLine() {
     return (digitalRead(lsr) == HIGH);
+}
+
+int lrangeDistance() {
+    return analogRead(lrange);
+}
+
+int srangeDistance() {
+    return analogRead(srange);
 }

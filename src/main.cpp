@@ -11,7 +11,7 @@ int power = 100; // average speed of motors
 
 //Variables for the single sensor line follower:
 int dir = 1; //1 corresponds to left, -1 to right
-bool change = true; //Whether or not the robot should change directions when hitting the black
+bool change = false; //Whether or not the robot should change directions when hitting the black
 
 //Variables for the 3 sensor line follower:
 double avg1[10] = {1,1,1,1,1,1,1,1,1,1}; // last 10 inputs of the line sensors. The averages will be calculated from these functions
@@ -26,11 +26,20 @@ void setup()
 
     MR->run(FORWARD);
     ML->run(FORWARD);
+
+    MR->setSpeed(power);
+    ML->setSpeed(power);
+
+    delay(1000);
 }
 
 void loop()
 {
-    lf3s();
-    lf1s();
-    spin_180();
+    // lf3s();
+    // spin_180();
+    // while (true) {
+    //     lf1s();
+    // }
+    Serial.println(lrangeDistance());
+    delay(100);
 }

@@ -11,5 +11,7 @@ void electronics_setup();
 bool leftOnLine();
 bool centerOnLine();
 bool rightOnLine();
+int lrangeDistance();
+int srangeDistance();
 
 #endif
