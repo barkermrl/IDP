@@ -11,7 +11,7 @@ extern Adafruit_DCMotor *MR; //Right
 void electronics_setup();
 int lrangeDistance();
 int srangeDistance();
-bool pauseButton();
+void pauseButton();
 bool LOnLine();
 bool LMOnLine();
 bool RMOnLine();

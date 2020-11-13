@@ -50,8 +50,5 @@ void loop()
         spin_180();
         junc = false;
     }
-    if (pauseButton()){
-        MR->setSpeed(0);
-        ML->setSpeed(0);
-    }
+    pauseButton();
 }

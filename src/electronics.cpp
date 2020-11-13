@@ -72,15 +72,21 @@ void updateSpeed(){
     }   
 }
 
-bool pauseButton() {
+void pauseButton() {
+    // if button is pressed
     if (!digitalRead(interruptPin)) {
-        // delay to allow time for button to reset
-    while(!digitalRead(interruptPin));
-        // toggle paused boolean
-        paused = !paused;
-        delay(10); 
+        // turn the motors off
+        MR->setSpeed(0);
+        ML->setSpeed(0);
+        // wait until button is released
+        while(!digitalRead(interruptPin)){};
+        // wait while button is off
+        while(digitalRead(interruptPin)){};
+        // wait until button has been released
+        while(!digitalRead(interruptPin)){};
+        // return to main control flow 
     }
-    return paused;
+    
 }
 
 int lrangeDistance() {
