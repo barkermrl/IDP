@@ -5,28 +5,25 @@
 void spin_180()
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
-    if (centerOnLine())
+    if (RMOnLine())
     {
         MR->run(FORWARD);
         ML->run(BACKWARD);
         MR->setSpeed(power);
         ML->setSpeed(power);
-        while (centerOnLine())
+        while (RMOnLine())
         {
             delay(100);
         }
     }
-    bool x = true;
-    while (x == true)
-    {
-        if (centerOnLine())
+    for (int i = 0; i <= 10000, i++;){
+        if (RMOnLine())
         {
             MR->run(FORWARD);
             ML->run(FORWARD);
-
-            ML->setSpeed(power + kw * dir);
-            MR->setSpeed(power - kw * dir);
-            x = false;
+            ML->setSpeed(0);
+            MR->setSpeed(0);
+            break;
         }
     }
 }

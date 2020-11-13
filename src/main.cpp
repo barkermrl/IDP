@@ -3,14 +3,18 @@
 #include "spin_180.h"
 #include "variables.h"
 #include "electronics.h"
+#include "lf4.h"
+#include "juntTest.h"
 
-int kp = 50;     //proportional coeff for control using running averages
-int kw = 50;     //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
+double kw = 10;//oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
+const int kw_min = kw; 
+int kp = 10; //proportional coeff for control using running averages
 int power = 100; // average speed of motors
 
 //Variables for the single sensor line follower:
-int dir = 1;         //1 corresponds to left, -1 to right
-bool change = false; //Whether or not the robot should change directions when hitting the black
+int dir = 1; //1 corresponds to left, -1 to right
+bool change = true; //Whether or not the robot should change directions when hitting the black
+bool junc = false;
 
 //Variables for the 3 sensor line follower:
 double avg1[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // last 10 inputs of the line sensors. The averages will be calculated from these functions
@@ -26,23 +30,25 @@ void setup()
     MR->run(FORWARD);
     ML->run(FORWARD);
 
-    MR->setSpeed(power);
-    ML->setSpeed(power);
-
     electronics_setup();
+    updateSpeed();
 }
 
 void loop()
 {
-    spin_180();
-    while (true)
-    {
-        lf1s();
-        // if interrupt is pressed, set motor speed to 0
-        if (pauseButton())
-        {
-            MR->setSpeed(0);
-            ML->setSpeed(0);
-        }
+    if (junc == false){
+        //lf3s();
+        // lf1s();
+        // spin_180();
+        lf4();
+        juncTest();
     }
+    if (junc == true){
+        MR -> setSpeed(power);
+        ML -> setSpeed(power);
+        delay(500);
+        spin_180();
+        junc = false;
+    }
+    pauseButton();
 }
