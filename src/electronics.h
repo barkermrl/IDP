@@ -9,11 +9,13 @@ extern Adafruit_DCMotor *ML; //Left
 extern Adafruit_DCMotor *MR; //Right
 
 void electronics_setup();
-bool leftOnLine();
-bool centerOnLine();
-bool rightOnLine();
 int lrangeDistance();
 int srangeDistance();
 bool pauseButton();
+bool LOnLine();
+bool LMOnLine();
+bool RMOnLine();
+bool ROnLine();
+void updateSpeed();
 
 #endif
