@@ -16,10 +16,13 @@ int dir = 1; //1 corresponds to left, -1 to right
 bool change = true; //Whether or not the robot should change directions when hitting the black
 bool junc = false;
 
-//Variables for the 3 sensor line follower:
-double avg1[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // last 10 inputs of the line sensors. The averages will be calculated from these functions
-double avg2[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-double avg3[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+int numB = 0;
+int numR = 0;
+int tunnelSide = 0;
+int tillJunc = 0;
+int currentblock = 0;
+int direction = 0;
+
 
 void setup()
 {
