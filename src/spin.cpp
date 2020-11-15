@@ -39,6 +39,6 @@ void spin180(int power, int direction) //direction tells you wether or not you s
             ML->setSpeed(0);
             MR->setSpeed(0);
             break;
+        }
     }
 }
-

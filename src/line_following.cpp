@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "electronics.h"
+#include "line_following.h"
 
-bool lf1s(int power, int kw, int kw_min, int dir, bool change)
+void lf1s(int power, int kw, int kw_min, int dir)
 {
     //Single swtich
     if (LMOnLine() && change == false)
@@ -37,10 +38,9 @@ bool lf1s(int power, int kw, int kw_min, int dir, bool change)
             delay(50);
         }
     }
-    return dir;
 }
 
-int lf4s(int power, int kw, int kw_min, int dir)
+void lf4s(int power, int kw_min)
 {
     // Line is 2cm wide, Targets are 7.5cm wide
     if (dir == -1 && LMOnLine())
@@ -61,7 +61,6 @@ int lf4s(int power, int kw, int kw_min, int dir)
         updateSpeed(power, kw, dir);
         // Serial.println(kw);
     }
-    return dir;
 }
 
 void followCurve()

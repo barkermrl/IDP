@@ -60,12 +60,12 @@ void loop()
     switch (output)
     {
     case SPIN_180:
-        spin180(power);
+        spin180(power, direction);
         break;
 
     default:
         // By default continue following the line
-        dir = lf4s(power, kw, kw_min, dir);
+        lf4s(power, kw_min);
         break;
     }
 
