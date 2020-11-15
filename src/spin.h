@@ -1,3 +1,3 @@
-void spin180();
-void spin90Left();
-void spin90Right();
+void spin180(int power);
+void spin90Left(int power);
+void spin90Right(int power);

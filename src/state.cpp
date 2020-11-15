@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "variables.h"
 #include "electronics.h"
 
 //State functions that contains all state variables
@@ -61,15 +60,18 @@ bool getAtJunction()
         delay(50);
         if (ROnLine())
         {
-            junc = true;
+            return true;
         }
     }
-    if (LOnLine())
+    else if (LOnLine())
     {
         delay(50);
         if (LOnLine())
         {
-            junc = true;
+            return true;
         }
+    }
+    else {
+        return false;
     }
 }

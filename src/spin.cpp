@@ -1,8 +1,7 @@
 #include <Arduino.h>
-#include "variables.h"
 #include "electronics.h"
 
-void spin180()
+void spin180(int power)
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
     if (RMOnLine())
@@ -29,7 +28,7 @@ void spin180()
     }
 }
 
-void spin90Left()
+void spin90Left(int power)
 {
     // Robot spins 90 left
 
@@ -38,7 +37,7 @@ void spin90Left()
     ***********************/
 }
 
-void spin90Right()
+void spin90Right(int power)
 {
     // Robot spins 90 right
 

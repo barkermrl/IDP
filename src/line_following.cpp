@@ -1,8 +1,7 @@
 #include <Arduino.h>
 #include "electronics.h"
-#include "variables.h"
 
-void lf1s()
+bool lf1s(int power, int kw, int kw_min, int dir, bool change)
 {
     //Single swtich
     if (LMOnLine() && change == false)
@@ -38,29 +37,31 @@ void lf1s()
             delay(50);
         }
     }
+    return dir;
 }
 
-void lf4()
+int lf4s(int power, int kw, int kw_min, int dir)
 {
     // Line is 2cm wide, Targets are 7.5cm wide
     if (dir == -1 && LMOnLine())
     {
         dir = dir * -1;
         kw = kw_min;
-        updateSpeed();
+        updateSpeed(power, kw, dir);
     }
     if (dir == 1 && RMOnLine())
     {
         kw = kw_min;
         dir = dir * -1;
-        updateSpeed();
+        updateSpeed(power, kw, dir);
     }
     else
     {
         kw = kw + 0.7;
-        updateSpeed();
-        Serial.println(kw);
+        updateSpeed(power, kw, dir);
+        // Serial.println(kw);
     }
+    return dir;
 }
 
 void followCurve()

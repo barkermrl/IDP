@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
-#include "variables.h"
 #include "electronics.h"
 
 // Variables for sensors
@@ -50,7 +49,7 @@ bool ROnLine()
     return (digitalRead(ls4) == HIGH);
 }
 
-void updateSpeed()
+void updateSpeed(int power, int kw, int dir)
 {
     if ((power - kw * dir) > 255)
     {
