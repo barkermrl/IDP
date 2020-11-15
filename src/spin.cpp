@@ -2,7 +2,7 @@
 #include "variables.h"
 #include "electronics.h"
 
-void spin_180()
+void spin180()
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
     if (RMOnLine())
@@ -16,7 +16,8 @@ void spin_180()
             delay(100);
         }
     }
-    for (int i = 0; i <= 10000, i++;){
+    for (int i = 0; i <= 10000, i++;)
+    {
         if (RMOnLine())
         {
             MR->run(FORWARD);
@@ -26,4 +27,22 @@ void spin_180()
             break;
         }
     }
+}
+
+void spin90Left()
+{
+    // Robot spins 90 left
+
+    /***********************
+    TODO
+    ***********************/
+}
+
+void spin90Right()
+{
+    // Robot spins 90 right
+
+    /***********************
+    TODO
+    ***********************/
 }
