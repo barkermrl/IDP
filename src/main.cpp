@@ -4,6 +4,7 @@
 #include "state.h"          // algorithms to get state variables
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
+#include "variables.h"
 
 // General variables controlling robot behaviour
 double kw = 10;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
@@ -60,12 +61,12 @@ void loop()
     switch (output)
     {
     case SPIN_180:
-        spin180(power, direction);
+        spin180(direction);
         break;
 
     default:
         // By default continue following the line
-        lf4s(power, kw_min);
+        lf4s();
         break;
     }
 

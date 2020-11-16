@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "electronics.h"
+#include "line_following.h"
 
-void spin180(int power, int direction) //direction tells you wether or not you should spin to the right (-1) or to the left (+1)
+void spin180(int direction) //direction tells you wether or not you should spin to the right (-1) or to the left (+1)
 {
     //Function to do a 180* turn (Assuming midde sensor comes of the line during the turn)
     if (RMOnLine() or LMOnLine()) //occurs when either one of the sensors is on the line

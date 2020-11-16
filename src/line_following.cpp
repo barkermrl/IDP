@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include "electronics.h"
+#include "spin.h"
 #include "line_following.h"
+#define turnThresh 150
 
-void lf1s(int power, int kw, int kw_min, int dir)
+void lf1s()
 {
     //Single swtich
     if (LMOnLine() && change == false)
@@ -40,7 +42,23 @@ void lf1s(int power, int kw, int kw_min, int dir)
     }
 }
 
-void lf4s(int power, int kw_min)
+void followCurve() //function to spin on the curve if the kw is too high 
+{
+    if (kw >= turnThresh && dir == -1){
+        MR ->setSpeed(power);
+        ML ->setSpeed(power);
+        delay(500);
+        spin180(-1);
+    }
+    else if(kw >= turnThresh && dir == 1){
+        MR ->setSpeed(power);
+        ML ->setSpeed(power);
+        delay(500);
+        spin180(1);
+    }
+}
+
+void lf4s()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
     if (dir == -1 && LMOnLine())
@@ -63,10 +81,7 @@ void lf4s(int power, int kw_min)
     }
 }
 
-void followCurve()
+void followCurve(int kw)
 {
-    // Follows curve around the track
-    /***********************
-    TODO
-    ***********************/
+
 }
