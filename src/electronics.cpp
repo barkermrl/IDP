@@ -119,7 +119,7 @@ int srangeDistance()
     // short range distance reading
     // returns an integer giving the distance reading in mm
    float distance;
-   distance=-4.9261+33.4525/analogRead(srange);
+   distance=-4.9261+33.4525/（analogRead(srange)*5/1024）;
 
     return distance;
 }
