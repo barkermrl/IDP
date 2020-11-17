@@ -4,7 +4,7 @@
 
 // Variables for sensors
 #define ls1 9     //L
-#define ls2 6     //Middle sensor for single line following, LM for 4 sensor following
+#define ls2 13     //Middle sensor for single line following, LM for 4 sensor following
 #define ls3 7     //RM
 #define ls4 8     //R
 #define srange A0 // Long range sensor

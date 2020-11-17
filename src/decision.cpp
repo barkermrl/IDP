@@ -1,13 +1,35 @@
+#include "electronics.h"
 #include "decision.h"
+#include "state.h"
+#include <Arduino.h>
+#include "line_following.h"
 
-int makeDecision(int numB, int numR, int tunnelSide, int untilJunction,
-                 bool atJunction, int currentBlock, int direction)
+int makeDecision()
 {
-    // Makes decision which output to give based on all the the state variables
+    // start phase
+    if (phase == 1 && !atJunction){
+        return FOLLOW_LINE;
+    }
+    else if (phase == 1 && atJunction && untilJunction < 2){
+        untilJunction = untilJunction +1;
 
-    /***********************
-    TODO
-    ***********************/
+        ML -> setSpeed(power);
+        MR -> setSpeed(power);
+        
+        while (atJunction){
+            getAtJunction();
+        }
+        return FOLLOW_LINE;
+    }
+    else if (phase == 1 && atJunction && untilJunction == 2){
+        start = 0;
+        tunnelSide = 1;
+        return FOLLOW_LINE;
+    // End start phase
 
-    return SPIN_180;
+    //Other phases currently
+    if (phase == 2 or phase == 3 or phase ==4){
+        return STOP;
+    }
+    }
 }

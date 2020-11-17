@@ -2,6 +2,7 @@
 #include "electronics.h"
 #include "spin.h"
 #include "line_following.h"
+#include "state.h"
 #define turnThresh 150
 
 void lf1s()
@@ -48,13 +49,15 @@ void followCurve() //function to spin on the curve if the kw is too high
         MR ->setSpeed(power);
         ML ->setSpeed(power);
         delay(500);
-        spin180(-1);
+        directionSPIN = -1;
+        spin180();
     }
     else if(kw >= turnThresh && dir == 1){
         MR ->setSpeed(power);
         ML ->setSpeed(power);
         delay(500);
-        spin180(1);
+        directionSPIN = 1;
+        spin180();
     }
 }
 
@@ -79,9 +82,4 @@ void lf4s()
         updateSpeed(power, kw, dir);
         // Serial.println(kw);
     }
-}
-
-void followCurve(int kw)
-{
-
 }
