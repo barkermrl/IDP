@@ -17,18 +17,19 @@ int makeDecision()
         MR -> setSpeed(power);
         
         while (atJunction){
-            getAtJunction();
+           getAtJunction();
         }
+        updateSpeed();
         return FOLLOW_LINE;
     }
     else if (phase == 1 && atJunction && untilJunction == 2){
         start = 0;
         tunnelSide = 1;
-        return FOLLOW_LINE;
+        return STOP;
     // End start phase
 
     //Other phases currently
-    if (phase == 2 or phase == 3 or phase ==4){
+    if (phase == 2 or phase == 3 or phase == 4 or phase ==5){
         return STOP;
     }
     }

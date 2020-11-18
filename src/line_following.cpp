@@ -3,14 +3,14 @@
 #include "spin.h"
 #include "line_following.h"
 #include "state.h"
-#define turnThresh 150
+#define turnThresh 200
 
 void lf1s()
 {
     //Single swtich
     if (LMOnLine() && change == false)
     {
-        delay(50);
+        delay(10);
         if (LMOnLine())
         { //to make sure the "low" reading isnt a sudden random drop
             ML->setSpeed(power + kw * dir);
@@ -30,7 +30,7 @@ void lf1s()
 
     if (!LMOnLine() && change == true)
     {
-        delay(50);
+        delay(10);
         if (!LMOnLine())
         { //to make sure the "high" reading isnt a sudden random spike
             dir = -1 * dir;
@@ -49,14 +49,18 @@ void followCurve() //function to spin on the curve if the kw is too high
         MR ->setSpeed(power);
         ML ->setSpeed(power);
         delay(500);
-        directionSPIN = -1;
+        directionSPIN = 1;
+        kw = kw_min;
+        Serial.println(directionSPIN);
         spin180();
     }
     else if(kw >= turnThresh && dir == 1){
         MR ->setSpeed(power);
         ML ->setSpeed(power);
-        delay(500);
-        directionSPIN = 1;
+        delay(1000);
+        directionSPIN = -1;
+        kw = kw_min;
+        Serial.println(directionSPIN);
         spin180();
     }
 }
@@ -68,18 +72,18 @@ void lf4s()
     {
         dir = dir * -1;
         kw = kw_min;
-        updateSpeed(power, kw, dir);
+        updateSpeed();
     }
     if (dir == 1 && RMOnLine())
     {
         kw = kw_min;
         dir = dir * -1;
-        updateSpeed(power, kw, dir);
+        updateSpeed();
     }
     else
     {
         kw = kw + 0.7;
-        updateSpeed(power, kw, dir);
+        updateSpeed();
         // Serial.println(kw);
     }
 }

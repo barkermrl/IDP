@@ -28,7 +28,7 @@ int untilJunction = 0;   //number of "junction detections" until we actually hit
 bool atJunction = false; //currently not at a junction
 int currentBlock = 0;    //2 for blue 1 for red 0 for empty
 int direction = 0;       //-1 for AC 1 for C.
-int directionSPIN = 0;   // if spin, which direction? -1 right 1 left
+int directionSPIN = 1;   // if spin, which direction? -1 right 1 left
 int output = 0;          //determines what the robot does at each timestep
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
@@ -36,14 +36,17 @@ int phase = 0;           //the phase we are currently in
 void setup()
 {
     Serial.begin(9600); // set up Serial library at 9600 bps
-    Serial.println("Autobots, transform and roll out!");
+    Serial.println("autoBLOCKS, transform and roll out!");
     AFMS.begin(); // create with the default frequency 1.6KHz
 
     MR->run(FORWARD);
     ML->run(FORWARD);
 
+
     electronics_setup();
-    updateSpeed(power, kw, dir);
+    delay(5000);
+    updateSpeed(); 
+    
 }
 
 void loop()
@@ -67,11 +70,13 @@ void loop()
     {
     case SPIN_180:
         spin180();
+        lf4s();
         break;
     
     case STOP:
-        ML -> setSpeed(0);
-        MR -> setSpeed(0);
+         ML -> setSpeed(0);
+         MR -> setSpeed(0);
+        break;
 
     default:
         // By default continue following the line

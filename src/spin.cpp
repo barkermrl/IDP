@@ -9,23 +9,26 @@ void spin180() //direction tells you wether or not you should spin to the right 
     if (abs(directionSPIN) == 1){
         if (RMOnLine() or LMOnLine()) //occurs when either one of the sensors is on the line
         {
-            if (directionSPIN == 1){
+            if (directionSPIN == 1){ //spinning to the left
                 MR->run(FORWARD);
                 ML->run(BACKWARD);
+                ML ->setSpeed(power);
+                MR -> setSpeed(power);
             }
-            else
+            else //spinning to the right
             {
                 MR->run(BACKWARD);
                 ML->run(FORWARD);
+                ML ->setSpeed(power);
+                MR -> setSpeed(power);
             }
-            MR->setSpeed(power);
-            ML->setSpeed(power);
             while (RMOnLine() or LMOnLine())
             {
                 delay(100);
             }
         }
-        for (int i = 0; i <= 10000, i++;)
+
+        while (true)
         {
             if (RMOnLine() && directionSPIN == 1)
             {
@@ -33,6 +36,7 @@ void spin180() //direction tells you wether or not you should spin to the right 
                 ML->run(FORWARD);
                 ML->setSpeed(0);
                 MR->setSpeed(0);
+                delay(10000);
                 break;
             }
             if (LMOnLine() && directionSPIN == -1)
@@ -41,6 +45,7 @@ void spin180() //direction tells you wether or not you should spin to the right 
                 ML->run(FORWARD);
                 ML->setSpeed(0);
                 MR->setSpeed(0);
+                delay(10000);
                 break;
             }
         }

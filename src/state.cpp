@@ -7,21 +7,17 @@
 
 void getAtJunction()
 {
-    if (ROnLine())
+    // if (ROnLine())
+    // {
+    //     delay(50);
+    //     if (ROnLine())
+    //     {
+    //         atJunction= true;
+    //     }
+    // }
+    /*else*/ if (LOnLine())
     {
-        delay(50);
-        if (ROnLine())
-        {
             atJunction= true;
-        }
-    }
-    else if (LOnLine())
-    {
-        delay(50);
-        if (LOnLine())
-        {
-            atJunction= true;
-        }
     }
     else {
         atJunction= false;
