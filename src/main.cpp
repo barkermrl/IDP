@@ -5,6 +5,7 @@
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
 #include "variables.h"
+#include "phase.h"
 
 // General variables controlling robot behaviour
 double kw = 10;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
@@ -26,42 +27,55 @@ int tunnelSide = 0;      //which side of the tunnel are we currently
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
 int currentBlock = 0;    //2 for blue 1 for red 0 for empty
-int direction = 0;       //1 for AC 2 for C.
+int direction = 0;       //-1 for AC 1 for C.
+int directionSPIN = 1;   // if spin, which direction? -1 right 1 left
 int output = 0;          //determines what the robot does at each timestep
+int start = 1;           //a variable that calls for the start/end sequence
+int phase = 0;           //the phase we are currently in
 
 void setup()
 {
     Serial.begin(9600); // set up Serial library at 9600 bps
-    Serial.println("Autobots, transform and roll out!");
+    Serial.println("autoBLOCKS, transform and roll out!");
     AFMS.begin(); // create with the default frequency 1.6KHz
 
     MR->run(FORWARD);
     ML->run(FORWARD);
 
+
     electronics_setup();
-    updateSpeed(power, kw, dir);
+    delay(5000);
+    updateSpeed(); 
+    
 }
 
 void loop()
 {
     // Get state variables for this timestep
-    numB = getNumB();
-    numR = getNumR();
-    tunnelSide = getTunnelSide();
-    untilJunction = getUntilJunc();
-    atJunction = getAtJunction();
-    currentBlock = getCurrentBlock();
-    direction = getDirection();
+    // numB = getNumB();
+    // numR = getNumR();
+    // tunnelSide = getTunnelSide();
+    // untilJunction = getUntilJunc();
+    // atJunction = getAtJunction();
+    // currentBlock = getCurrentBlock();
+    // direction = getDirection();
+    getPhase();
+    getAtJunction();
 
     // Get output from the decision making process
-    output = makeDecision(numB, numR, tunnelSide, untilJunction, atJunction,
-                          currentBlock, direction);
+    output = makeDecision();
 
     // Switch case to call the correct output
     switch (output)
     {
     case SPIN_180:
-        spin180(direction);
+        spin180();
+        lf4s();
+        break;
+    
+    case STOP:
+         ML -> setSpeed(0);
+         MR -> setSpeed(0);
         break;
 
     default:

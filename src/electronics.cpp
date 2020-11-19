@@ -1,17 +1,19 @@
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
 #include "electronics.h"
+#include "line_following.h"
+#include "state.h"
 
 // Variables for sensors
-#define ls1 9     //L
-#define ls2 6     //Middle sensor for single line following, LM for 4 sensor following
-#define ls3 7     //RM
-#define ls4 8     //R
+#define ls1 13     //L
+#define ls2 12     //Middle sensor for single line following, LM for 4 sensor following
+#define ls3 10     //RM
+#define ls4 11     //R
 #define srange A0 // Long range sensor
 #define lrange A1 // Short range sensor
 
 // Defining interrupt
-#define interruptPin 13
+#define interruptPin 8
 bool paused = false;
 
 //Defining Motors:
@@ -49,7 +51,7 @@ bool ROnLine()
     return (digitalRead(ls4) == HIGH);
 }
 
-void updateSpeed(int power, int kw, int dir)
+void updateSpeed()
 {
     if ((power - kw * dir) > 255)
     {

@@ -1,5 +1,4 @@
-int makeDecision(int numB, int numR, int tunnelSide, int untilJunction,
-                 bool atJunction, int currentBlock, int direction);
+int makeDecision();
 
 enum output_status
 {
@@ -8,4 +7,5 @@ enum output_status
     SPIN_90_R = 2,
     FOLLOW_LINE = 3,
     FOLLOW_CURVE = 4,
+    STOP = 4,
 };

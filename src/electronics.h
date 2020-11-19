@@ -16,6 +16,6 @@ bool LOnLine();
 bool LMOnLine();
 bool RMOnLine();
 bool ROnLine();
-void updateSpeed(int power, int kw, int dir);
+void updateSpeed();
 
 #endif

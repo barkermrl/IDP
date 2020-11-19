@@ -1,77 +1,25 @@
 #include <Arduino.h>
 #include "electronics.h"
+#include "state.h"
+#include "line_following.h"
 
 //State functions that contains all state variables
 
-void stateVar()
+void getAtJunction()
 {
-    /***********************
-    TODO
-    ***********************/
-}
-
-int getNumB()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-int getNumR()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-int getTunnelSide()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-int getUntilJunc()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-int getCurrentBlock()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-int getDirection()
-{
-    /***********************
-    TODO
-    ***********************/
-};
-
-
-bool getAtJunction()
-{
-    if (ROnLine())
+    // if (ROnLine())
+    // {
+    //     delay(50);
+    //     if (ROnLine())
+    //     {
+    //         atJunction= true;
+    //     }
+    // }
+    /*else*/ if (LOnLine())
     {
-        delay(50);
-        if (ROnLine())
-        {
-            return true;
-        }
-    }
-    else if (LOnLine())
-    {
-        delay(50);
-        if (LOnLine())
-        {
-            return true;
-        }
+            atJunction= true;
     }
     else {
-        return false;
+        atJunction= false;
     }
 }
