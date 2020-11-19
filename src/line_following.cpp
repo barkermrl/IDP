@@ -49,19 +49,17 @@ void followCurve() //function to spin on the curve if the kw is too high
         MR ->setSpeed(power);
         ML ->setSpeed(power);
         delay(500);
-        directionSPIN = 1;
         kw = kw_min;
-        Serial.println(directionSPIN);
-        spin180();
+        Serial.println("Left");
+        spin(LEFT);
     }
     else if(kw >= turnThresh && dir == 1){
         MR ->setSpeed(power);
         ML ->setSpeed(power);
         delay(1000);
-        directionSPIN = -1;
         kw = kw_min;
-        Serial.println(directionSPIN);
-        spin180();
+        Serial.println("Right");
+        spin(RIGHT);
     }
 }
 

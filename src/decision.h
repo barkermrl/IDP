@@ -2,10 +2,12 @@
 #define DECISION_H
 enum output_status
 {
-    SPIN_180,
+    SPIN_L,
+    SPIN_R,
     FOLLOW_LINE,
     FOLLOW_CURVE ,
     STOP,
+    PANIC,
 };
 #endif
 

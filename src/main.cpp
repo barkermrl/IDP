@@ -21,7 +21,7 @@ int dir = 1; //1 corresponds to left, -1 to right
 // Defining state variables
 int numB = 0;            //number of blue targets delivered
 int numR = 0;            //number of red targets delivered
-int tunnelSide = 0;      //which side of the tunnel are we currently
+location_status location = HOME;        //where we are
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
 int currentBlock = 0;    //2 for blue 1 for red 0 for empty
@@ -64,8 +64,8 @@ void loop()
     // Switch case to call the correct output
     switch (output)
     {
-    case SPIN_180:
-        spin180();
+    case SPIN_L:
+        spin(LEFT);
         lf4s();
         break;
 
