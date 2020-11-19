@@ -1,5 +1,3 @@
-
-
 #ifndef STATE_VAR
 #define STATE_VAR
 
@@ -10,7 +8,6 @@ extern int untilJunction;   //number of "junction detections" until we actually 
 extern bool atJunction;     //currently not at a junction
 extern int currentBlock;    //2 for blue 1 for red 0 for empty
 extern int direction;       //-1 for AC 1 for C.
-extern int output;          //determines what the robot does at each timestep
 extern int start;           //a variable that calls for the start/end sequence
 extern int phase;           //the phase we are currently in
 extern int directionSPIN; 

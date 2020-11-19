@@ -4,8 +4,6 @@
 #include "state.h"          // algorithms to get state variables
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
-#include "variables.h"
-#include "phase.h"
 
 // General variables controlling robot behaviour
 double kw = 10;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
@@ -29,7 +27,7 @@ bool atJunction = false; //currently not at a junction
 int currentBlock = 0;    //2 for blue 1 for red 0 for empty
 int direction = 0;       //-1 for AC 1 for C.
 int directionSPIN = 1;   // if spin, which direction? -1 right 1 left
-int output = 0;          //determines what the robot does at each timestep
+output_status output;    //determines what the robot does at each timestep
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 
@@ -42,11 +40,9 @@ void setup()
     MR->run(FORWARD);
     ML->run(FORWARD);
 
-
     electronics_setup();
     delay(5000);
-    updateSpeed(); 
-    
+    updateSpeed();
 }
 
 void loop()
@@ -72,10 +68,10 @@ void loop()
         spin180();
         lf4s();
         break;
-    
+
     case STOP:
-         ML -> setSpeed(0);
-         MR -> setSpeed(0);
+        ML->setSpeed(0);
+        MR->setSpeed(0);
         break;
 
     default:
