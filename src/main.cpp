@@ -16,20 +16,21 @@ bool change = true; //Whether or not the robot should change directions when hit
 bool junc = false;  //Whether the robot is at a junction (LEGACY)
 
 // Variables for 4 sensor line follower:
-int dir = 1; //1 corresponds to left, -1 to right
+dir_status dir = L; //1 corresponds to left, -1 to right
 
 // Defining state variables
-int numB = 0;            //number of blue targets delivered
-int numR = 0;            //number of red targets delivered
-location_status location = HOME;        //where we are
+int numB = 0; //number of blue targets delivered
+int numR = 0; //number of red targets delivered
+
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
-int currentBlock = 0;    //2 for blue 1 for red 0 for empty
-int direction = 0;       //-1 for AC 1 for C.
-int directionSPIN = 1;   // if spin, which direction? -1 right 1 left
-output_status output;    //determines what the robot does at each timestep
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
+
+currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
+location_status location = HOME;          //Which section of the track we're in
+direction_status direction = NONE;        //-1 for AC 1 for C.
+output_status output;                     //Determines what the robot does at each timestep
 
 void setup()
 {
@@ -48,13 +49,6 @@ void setup()
 void loop()
 {
     // Get state variables for this timestep
-    // numB = getNumB();
-    // numR = getNumR();
-    // tunnelSide = getTunnelSide();
-    // untilJunction = getUntilJunc();
-    // atJunction = getAtJunction();
-    // currentBlock = getCurrentBlock();
-    // direction = getDirection();
     getPhase();
     getAtJunction();
 
@@ -69,10 +63,23 @@ void loop()
         lf4s();
         break;
 
+    case SPIN_R:
+        spin(RIGHT);
+        lf4s();
+        break;
+
     case STOP:
         ML->setSpeed(0);
         MR->setSpeed(0);
         break;
+
+    case FINISH:
+        ML->setSpeed(0);
+        MR->setSpeed(0);
+        // Get stuck in infinite while loop
+        while (true)
+        {
+        };
 
     default:
         // By default continue following the line

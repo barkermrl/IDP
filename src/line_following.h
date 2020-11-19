@@ -1,17 +1,25 @@
 void lf1s();
 void lf4s();
 void followCurve();
+void toggleDir();
 
 #ifndef LS_H
 #define LS_H
 
 // 4 sensor line following
 extern double kw;
-extern int dir;
+enum dir_status
+{
+    L = 1,
+    R = -1,
+};
+// 1 corresponds to left, -1 to right
+extern dir_status dir;
+
 extern const int kw_min;
 extern int power;
 
 // Single sensor line following
 extern bool change;
 
-#endif 
+#endif

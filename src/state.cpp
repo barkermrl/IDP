@@ -17,9 +17,10 @@ void getAtJunction()
     // }
     /*else*/ if (LOnLine())
     {
-            atJunction= true;
+        atJunction = true;
     }
-    else {
-        atJunction= false;
+    else
+    {
+        atJunction = false;
     }
 }

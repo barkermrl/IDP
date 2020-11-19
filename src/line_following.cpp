@@ -33,7 +33,7 @@ void lf1s()
         delay(10);
         if (!LMOnLine())
         { //to make sure the "high" reading isnt a sudden random spike
-            dir = -1 * dir;
+            toggleDir();
             kw = kw_min;
             ML->setSpeed(power + kw * dir);
             MR->setSpeed(power - kw * dir);
@@ -43,19 +43,21 @@ void lf1s()
     }
 }
 
-void followCurve() //function to spin on the curve if the kw is too high 
+void followCurve() //function to spin on the curve if the kw is too high
 {
-    if (kw >= turnThresh && dir == -1){
-        MR ->setSpeed(power);
-        ML ->setSpeed(power);
+    if (kw >= turnThresh && dir == R)
+    {
+        MR->setSpeed(power);
+        ML->setSpeed(power);
         delay(500);
         kw = kw_min;
         Serial.println("Left");
         spin(LEFT);
     }
-    else if(kw >= turnThresh && dir == 1){
-        MR ->setSpeed(power);
-        ML ->setSpeed(power);
+    else if (kw >= turnThresh && dir == L)
+    {
+        MR->setSpeed(power);
+        ML->setSpeed(power);
         delay(1000);
         kw = kw_min;
         Serial.println("Right");
@@ -66,16 +68,16 @@ void followCurve() //function to spin on the curve if the kw is too high
 void lf4s()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
-    if (dir == -1 && LMOnLine())
+    if (dir == R && LMOnLine())
     {
-        dir = dir * -1;
+        toggleDir();
         kw = kw_min;
         updateSpeed();
     }
-    if (dir == 1 && RMOnLine())
+    if (dir == L && RMOnLine())
     {
         kw = kw_min;
-        dir = dir * -1;
+        toggleDir();
         updateSpeed();
     }
     else
@@ -83,5 +85,17 @@ void lf4s()
         kw = kw + 0.7;
         updateSpeed();
         // Serial.println(kw);
+    }
+}
+
+void toggleDir()
+{
+    if (dir == L)
+    {
+        dir = R;
+    }
+    else if (dir = R)
+    {
+        dir = L;
     }
 }

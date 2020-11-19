@@ -8,9 +8,11 @@ enum output_status
     FOLLOW_CURVE ,
     STOP,
     PANIC,
+    FINISH,
 };
 #endif
 
 output_status makeDecision();
 void getPhase();
+void toggleDirection();
 

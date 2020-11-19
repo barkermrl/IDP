@@ -9,8 +9,8 @@ extern Adafruit_DCMotor *ML; //Left
 extern Adafruit_DCMotor *MR; //Right
 
 void electronics_setup();
-int lrangeDistance();
-int srangeDistance();
+float lrangeDistance();
+float srangeDistance();
 void pauseButton();
 bool LOnLine();
 bool LMOnLine();

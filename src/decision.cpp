@@ -17,7 +17,7 @@ output_status makeDecision()
         }
         else if (atJunction && untilJunction < 2)
         {
-            untilJunction = untilJunction + 1;
+            untilJunction++;
 
             ML->setSpeed(power);
             MR->setSpeed(power);
@@ -35,10 +35,10 @@ output_status makeDecision()
             location = LOOP;
             return STOP;
         } // End start phase
-    
+
     case 2: // Deliver blue blocks
         // TODO
-        return STOP;// End phase 2
+        return STOP; // End phase 2
 
     case 3: // Deliver red blocks
         // TODO
@@ -49,11 +49,20 @@ output_status makeDecision()
         {
             if (atJunction)
             {
-                // if (direction == )
+                if (direction == ANTICLOCKWISE)
+                {
+                    location = TUNNEL;
+                    return SPIN_R;
+                }
+                else if (direction == CLOCKWISE)
+                {
+                    location = TUNNEL;
+                    return SPIN_L;
+                }
             }
             else if (untilJunction == 2)
             {
-                direction = -1*direction;
+                toggleDirection();
                 return SPIN_L;
             }
             else if (untilJunction == 0)
@@ -62,8 +71,28 @@ output_status makeDecision()
             }
         }
         else if (location == TUNNEL)
-        break; // End phase 4
-    
+        {
+            if (atJunction)
+            {
+                location = HOME;
+            }
+            return FOLLOW_LINE;
+        }
+        else if (location == HOME)
+        {
+            if (atJunction)
+            {
+                // Back at home square
+                // Wait have a second to get into square
+                delay(1000);
+                return FINISH;
+            }
+            else
+            {
+                return FOLLOW_LINE;
+            }
+        } // End phase 4
+
     case 5: // Does something?
         // TODO
         return STOP; // End phase 5
@@ -71,7 +100,19 @@ output_status makeDecision()
     default: // Lost!
         Serial.println("PANIC!");
         return PANIC;
-    } 
+    }
+}
+
+void toggleDirection()
+{
+    if (direction == CLOCKWISE)
+    {
+        direction = ANTICLOCKWISE;
+    }
+    else if (direction == ANTICLOCKWISE)
+    {
+        direction = CLOCKWISE;
+    }
 }
 
 void getPhase()
