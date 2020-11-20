@@ -7,6 +7,8 @@ extern int untilJunction; //number of "junction detections" until we actually hi
 extern bool atJunction;   //currently not at a junction
 extern int start;         //a variable that calls for the start/end sequence
 extern int phase;         //the phase we are currently in
+extern int turning;       //1 if we are turning, 0 if we are not turning
+extern int counter;       //test variable
 
 // Current block in grabber
 enum currentBlock_status
@@ -38,3 +40,4 @@ extern location_status location;
 #endif
 
 void getAtJunction();
+void getUntilJunc();

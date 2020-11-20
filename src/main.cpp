@@ -4,6 +4,7 @@
 #include "state.h"          // algorithms to get state variables
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
+#include <Servo.h>
 
 // General variables controlling robot behaviour
 double kw = 10;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
@@ -26,10 +27,12 @@ int untilJunction = 0;   //number of "junction detections" until we actually hit
 bool atJunction = false; //currently not at a junction
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
+int counter = 0;
+int turning = 0;
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
 location_status location = HOME;          //Which section of the track we're in
-direction_status direction = NONE;        //-1 for AC 1 for C.
+direction_status direction = NONE;   //-1 for AC 1 for C.
 output_status output;                     //Determines what the robot does at each timestep
 
 void setup()
@@ -50,10 +53,15 @@ void loop()
 {
     // Get state variables for this timestep
     getPhase();
-    getAtJunction();
+
+    if (turning == 0)
+    {
+        getAtJunction();
+    }
 
     // Get output from the decision making process
     output = makeDecision();
+    counter++;
 
     // Switch case to call the correct output
     switch (output)
@@ -61,6 +69,7 @@ void loop()
     case SPIN_L:
         spin(LEFT);
         lf4s();
+        Serial.println("Done Spin");
         break;
 
     case SPIN_R:
@@ -71,6 +80,7 @@ void loop()
     case STOP:
         ML->setSpeed(0);
         MR->setSpeed(0);
+        //Serial.println("STOP");
         break;
 
     case FINISH:
@@ -79,14 +89,15 @@ void loop()
         // Get stuck in infinite while loop
         while (true)
         {
+            //  Serial.println("WHILE");
         };
 
     default:
         // By default continue following the line
         lf4s();
-        break;
+        //Serial.println("Line following");
     }
 
     // Check the interrupt
-    pauseButton();
+    //pauseButton();
 }

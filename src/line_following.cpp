@@ -43,25 +43,20 @@ void lf1s()
     }
 }
 
-void followCurve() //function to spin on the curve if the kw is too high
+void followCurve() //function to disable junction detection on the curve if the kw crosses a threshold is too high
 {
-    if (kw >= turnThresh && dir == R)
+    if (counter > 100)
     {
-        MR->setSpeed(power);
-        ML->setSpeed(power);
-        delay(500);
-        kw = kw_min;
-        Serial.println("Left");
-        spin(LEFT);
+        //Serial.println("JUNC SENSING ON");
+        counter = 0;
+        turning = 0;
+        Serial.println("JUNC SENSING ON");
     }
-    else if (kw >= turnThresh && dir == L)
+    if (kw >= turnThresh)
     {
-        MR->setSpeed(power);
-        ML->setSpeed(power);
-        delay(1000);
-        kw = kw_min;
-        Serial.println("Right");
-        spin(RIGHT);
+        Serial.println("JUNC SENSING OFF");
+        turning = 1;
+        counter =0;
     }
 }
 
@@ -82,6 +77,7 @@ void lf4s()
     }
     else
     {
+        followCurve();
         kw = kw + 0.7;
         updateSpeed();
         // Serial.println(kw);
@@ -90,6 +86,7 @@ void lf4s()
 
 void toggleDir()
 {
+    //Serial.println("Toggle Direction");
     if (dir == L)
     {
         dir = R;

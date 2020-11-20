@@ -7,20 +7,23 @@
 
 void getAtJunction()
 {
-    // if (ROnLine())
-    // {
-    //     delay(50);
-    //     if (ROnLine())
-    //     {
-    //         atJunction= true;
-    //     }
-    // }
-    /*else*/ if (LOnLine())
+    if (ROnLine())
     {
         atJunction = true;
+        Serial.println("JUNC DETECTED");
+    }
+    else if (LOnLine())
+    {
+        atJunction = true;
+        Serial.println("JUNC DETECTED");
     }
     else
     {
         atJunction = false;
     }
+}
+
+void getUntilJunc()
+{
+    untilJunction = 2 - untilJunction;
 }
