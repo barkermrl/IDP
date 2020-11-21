@@ -17,5 +17,7 @@ bool LMOnLine();
 bool RMOnLine();
 bool ROnLine();
 void updateSpeed();
+void openMechanism();
+void closeMechanism();
 
 #endif

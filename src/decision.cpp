@@ -151,7 +151,7 @@ output_status makeDecision()
         } // End phase 4
 
     case 5: // Does something?
-        // TODO
+        
         return STOP; // End phase 5
 
     default: // Lost!

@@ -99,5 +99,5 @@ void loop()
     }
 
     // Check the interrupt
-    //pauseButton();
+    pauseButton();
 }

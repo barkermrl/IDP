@@ -35,6 +35,19 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_DCMotor *ML = AFMS.getMotor(2); //Left
 Adafruit_DCMotor *MR = AFMS.getMotor(1); //Right
 
+void openMechanism()
+{
+    // Opens mechanism
+    myservo.write(30); //30 corresponds to fully open 
+}
+
+void closeMechanism()
+{
+    // Opens mechanism
+    myservo.write(120);
+}
+
+
 void electronics_setup()
 {
     pinMode(interruptPin, INPUT_PULLUP);
@@ -46,6 +59,8 @@ void electronics_setup()
     pinMode(LED_BUILTIN, OUTPUT); //builtin LED
 
     myservo.attach(servopin);
+
+    openMechanism();
 }
 
 bool LOnLine()
@@ -109,6 +124,7 @@ void pauseButton()
         // turn the motors off
         MR->setSpeed(0);
         ML->setSpeed(0);
+        closeMechanism();
         // wait until button is released
         while (!digitalRead(interruptPin))
         {
@@ -146,14 +162,3 @@ float srangeDistance()
     return distance;
 }
 
-void openMechanism()
-{
-    // Opens mechanism
-    myservo.write(0);
-}
-
-void closeMechanism()
-{
-    // Opens mechanism
-    myservo.write(70);
-}
