@@ -27,9 +27,3 @@ void getUntilJunc()
 {
     untilJunction = 2 - untilJunction;
 }
-
-void getBlockAhead()
-{
-    // TODO
-    blockAhead = false;
-}

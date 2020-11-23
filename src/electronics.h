@@ -20,5 +20,7 @@ void updateSpeed();
 void openMechanism();
 void closeMechanism();
 int colour1read();
+void detectBlock();
+void detectBlockAhead();
 
 #endif

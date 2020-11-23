@@ -25,17 +25,19 @@ int numR = 0; //number of red targets delivered
 
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
-bool blockAhead = false; //if there is a block ahead
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
-int counter = 0;
-int turning = 0;
-
+int counter = 0;         // WHAT DOES THIS DO?
+bool turning = 0;        // WHAT DOES THIS DO?
+int _R = 0;              //(phase 2) 0 means spin when you see a red block and 1 means move it
+bool atBlock = false;    // 0 for no block detected, 1 for block detected by proximity
+bool blockAhead = false;
+bool complete2 = false;
 int test = 0;
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
 location_status location = HOME;          //Which section of the track we're in
-direction_status direction = NONE;   //-1 for AC 1 for C.
+direction_status direction = NONE;        //-1 for AC 1 for C.
 output_status output;                     //Determines what the robot does at each timestep
 
 void setup()
@@ -55,10 +57,11 @@ void setup()
 void loop()
 {
     // Get state variables for this timestep
-    //getPhase();
-    //getBlockAhead();
+    getPhase();
+    detectBlock();
+    detectBlockAhead();
 
-    if (turning == 0)
+    if (turning)
     {
         getAtJunction();
     }
@@ -99,17 +102,18 @@ void loop()
     {
         lf4s();
         getAtJunction();
-        if (atJunction == true){
-            ML-> setSpeed(0);
-            MR -> setSpeed(0);
+        if (atJunction == true)
+        {
+            ML->setSpeed(0);
+            MR->setSpeed(0);
             openMechanism();
-            ML ->run(BACKWARD);
-            MR ->run(BACKWARD);
-            ML-> setSpeed(power);
-            MR -> setSpeed(power);
+            ML->run(BACKWARD);
+            MR->run(BACKWARD);
+            ML->setSpeed(power);
+            MR->setSpeed(power);
             delay(5000);
-            ML-> setSpeed(0);
-            MR -> setSpeed(0);
+            ML->setSpeed(0);
+            MR->setSpeed(0);
         }
     }
 

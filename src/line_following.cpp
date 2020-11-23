@@ -49,14 +49,14 @@ void followCurve() //function to disable junction detection on the curve if the 
     {
         //Serial.println("JUNC SENSING ON");
         counter = 0;
-        turning = 0;
+        turning = false;
         Serial.println("JUNC SENSING ON");
     }
     if (kw >= turnThresh)
     {
         Serial.println("JUNC SENSING OFF");
-        turning = 1;
-        counter =0;
+        turning = true;
+        counter = 0;
     }
 }
 
@@ -94,5 +94,67 @@ void toggleDir()
     else if (dir = R)
     {
         dir = L;
+    }
+}
+
+void skipJunc()
+{
+    if (atJunction && location == LOOP)
+    {
+        if (untilJunction == 2)
+        {
+            untilJunction = untilJunction - 1;
+            if (direction == ANTICLOCKWISE)
+            {
+                MR->setSpeed(power);
+                ML->setSpeed(power);
+                while (atJunction)
+                {
+                    getAtJunction();
+                }
+                delay(1000);
+                spin(LEFT);
+            }
+            else
+            {
+                MR->setSpeed(power);
+                ML->setSpeed(power);
+                while (atJunction)
+                {
+                    getAtJunction();
+                }
+            }
+        }
+        if (untilJunction == 1)
+        {
+            untilJunction = untilJunction - 1;
+            if (direction == ANTICLOCKWISE){
+                MR->setSpeed(power);
+                ML->setSpeed(power);
+                while (atJunction)
+                {
+                    getAtJunction();
+                }
+            }
+            if (direction == CLOCKWISE){
+                MR->setSpeed(power);
+                ML->setSpeed(power);
+                while (atJunction)
+                {
+                    getAtJunction();
+                }
+                delay(1000);
+                spin(RIGHT);
+            }
+        }
+        if (untilJunction == 0){
+                untilJunction = 2;
+                MR->setSpeed(power);
+                ML->setSpeed(power);
+                while (atJunction)
+                {
+                    getAtJunction();
+                }
+        }
     }
 }
