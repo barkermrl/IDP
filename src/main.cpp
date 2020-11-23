@@ -7,7 +7,7 @@
 #include <Servo.h>
 
 // General variables controlling robot behaviour
-double kw = 10;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
+double kw = 20;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
 const int kw_min = kw; //set kw_min to kw for development
 int kp = 10;           //proportional coeff for control using running averages
 int power = 100;       //average speed of motors
@@ -29,6 +29,8 @@ int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int counter = 0;
 int turning = 0;
+
+int test = 0;
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
 location_status location = HOME;          //Which section of the track we're in
@@ -52,7 +54,7 @@ void setup()
 void loop()
 {
     // Get state variables for this timestep
-    getPhase();
+    //getPhase();
 
     if (turning == 0)
     {
@@ -60,9 +62,9 @@ void loop()
     }
 
     // Get output from the decision making process
-    output = makeDecision();
+    //output = makeDecision();
     counter++;
-
+    output = FOLLOW_LINE;
     // Switch case to call the correct output
     switch (output)
     {
@@ -91,10 +93,29 @@ void loop()
         {
             //  Serial.println("WHILE");
         };
+    case TEST:
+    {
+        lf4s();
+        getAtJunction();
+        if (atJunction == true){
+            ML-> setSpeed(0);
+            MR -> setSpeed(0);
+            openMechanism();
+            ML ->run(BACKWARD);
+            MR ->run(BACKWARD);
+            ML-> setSpeed(power);
+            MR -> setSpeed(power);
+            delay(5000);
+            ML-> setSpeed(0);
+            MR -> setSpeed(0);
+        }
+    }
 
     default:
         // By default continue following the line
         lf4s();
+        //Serial.print(colour1read());
+        //Serial.println(" ");
         //Serial.println("Line following");
     }
 

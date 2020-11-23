@@ -7,12 +7,12 @@
 
 void getAtJunction()
 {
-    if (ROnLine())
+    if ((ROnLine() && location == LOOP && direction == ANTICLOCKWISE) or (ROnLine() && location != LOOP))
     {
         atJunction = true;
         Serial.println("JUNC DETECTED");
     }
-    else if (LOnLine())
+    else if ((LOnLine() && location == LOOP && direction == CLOCKWISE) or (LOnLine() && location != LOOP))
     {
         atJunction = true;
         Serial.println("JUNC DETECTED");

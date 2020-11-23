@@ -9,6 +9,7 @@ enum output_status
     STOP,
     PANIC,
     FINISH,
+    TEST,
 };
 #endif
 

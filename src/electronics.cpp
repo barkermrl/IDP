@@ -6,16 +6,16 @@
 #include <Servo.h>
 
 // Variables for sensors
-#define ls1 6    //L
-#define ls2 7    //Middle sensor for single line following, LM for 4 sensor following
-#define ls3 5    //RM
-#define ls4 4    //R
+#define ls1 6 //L
+#define ls2 7 //Middle sensor for single line following, LM for 4 sensor following
+#define ls3 5 //RM
+#define ls4 4 //R
 
-#define colour1 0 //colour sensor 1
-#define colour2 1 //colour sensor 2
-#define ambLightSensor 3 //Ambient light sensor 
+#define colour1 0        //colour sensor 1
+#define colour2 1        //colour sensor 2
+#define ambLightSensor 3 //Ambient light sensor
 
-#define srange 2 // Long range sensor
+#define srange 2  // Long range sensor
 #define lrange A0 // Short range sensor
 
 // Defining interrupt
@@ -38,15 +38,21 @@ Adafruit_DCMotor *MR = AFMS.getMotor(1); //Right
 void openMechanism()
 {
     // Opens mechanism
-    myservo.write(30); //30 corresponds to fully open 
+    myservo.write(30); //30 corresponds to fully open
 }
 
-void closeMechanism()
+void closeMechanism() 
 {
     // Opens mechanism
-    myservo.write(120);
+    if (myservo.read() == 30)
+    {
+        for (int i = 30; i < 120; i = i + 1)
+        {
+            myservo.write(i);
+            delay(10);
+        }
+    }
 }
-
 
 void electronics_setup()
 {
@@ -57,6 +63,11 @@ void electronics_setup()
     pinMode(ls3, INPUT);          //RM
     pinMode(ls4, INPUT);          //R
     pinMode(LED_BUILTIN, OUTPUT); //builtin LED
+
+    pinMode(colour1, INPUT);
+    pinMode(colour2, INPUT);
+    pinMode(srange, INPUT);
+    pinMode(ambLightSensor, INPUT);
 
     myservo.attach(servopin);
 
@@ -90,10 +101,10 @@ void updateSpeed()
         ML->setSpeed(255);
     }
     else if ((power - kw * dir) < 0)
-    {   
+    {
         //ML -> run(BACKWARD);
         //ML->setSpeed(abs(power - kw * dir));
-        ML -> setSpeed(0);
+        ML->setSpeed(0);
     }
     else
     {
@@ -108,7 +119,7 @@ void updateSpeed()
     {
         // MR -> run(BACKWARD);
         // MR->setSpeed(abs(power + kw * dir));
-        MR -> setSpeed(0);
+        MR->setSpeed(0);
     }
     else
     {
@@ -125,6 +136,14 @@ void pauseButton()
         MR->setSpeed(0);
         ML->setSpeed(0);
         closeMechanism();
+        if (colour1read() == 1){
+            while(true){
+            }
+        }
+        else if (colour1read()==0){
+            openMechanism();
+            delay(2000);
+        }
         // wait until button is released
         while (!digitalRead(interruptPin))
         {
@@ -162,3 +181,19 @@ float srangeDistance()
     return distance;
 }
 
+int colour1read()
+{                                //reads from the colour sensor in pin 1
+    return digitalRead(colour2); //1 for red, 0 for blue
+}
+
+int amblight()
+{ //ambient light sensor. 1 if high light, 0 if low light
+    if (digitalRead(ambLightSensor) == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}

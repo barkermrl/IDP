@@ -19,5 +19,6 @@ bool ROnLine();
 void updateSpeed();
 void openMechanism();
 void closeMechanism();
+int colour1read();
 
 #endif

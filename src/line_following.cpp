@@ -22,7 +22,7 @@ void lf1s()
     {
         if (kw <= power)
         {
-            kw = kw + 1;
+            kw = kw + 0.5;
             ML->setSpeed(power + kw * dir);
             MR->setSpeed(power - kw * dir);
         }
@@ -77,7 +77,7 @@ void lf4s()
     }
     else
     {
-        followCurve();
+        //followCurve();
         kw = kw + 0.7;
         updateSpeed();
         // Serial.println(kw);
