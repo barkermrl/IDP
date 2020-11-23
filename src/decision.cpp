@@ -343,7 +343,13 @@ output_status makeDecision()
 
     case 3: // Deliver red blocks
         // location must be loop
-        if (numR == 0){
+        if (numR == 0)
+        {
+            // If we're at a junction, update count.
+            if (atJunction)
+            {
+                getUntilJunc();
+            }
             // If there is a block ahead...
             if (blockAhead)
             {
@@ -360,24 +366,60 @@ output_status makeDecision()
                 }
             }
             // If we don't have a block, continue line following.
-            else {
+            else
+            {
                 return FOLLOW_LINE;
             }
         }
-        else if (numR == 1){
-            // If there's another block ahead, spin around
-            if (blockAhead)
-            {
-                return spinToggleJunction();
+        else if (numR == 1)
+        {
+            // If we have a block...
+            if (currentBlock == RED) {
+                // ...and there's a block ahead, spin around.
+                if (blockAhead) {
+                    return spinToggleJunction();
+                }
+                // ... and we're at a delivery target, release block.
+                else if (atJunction && untilJunction != 0){
+                    // Update number of blocks delivered
+                    numR = 2;
+                    return RELEASE_BLOCK;
+                }
+                // ... and we're at the tunnel junction, keep going.
+                else if (atJunction && untilJunction == 0)
+                {
+                    // Update untilJunction
+                    getUntilJunc();
+                    return FOLLOW_LINE;
+                }
+                // ...and nothing is ahead, keep going.
+                else {
+                    return FOLLOW_LINE;
+                }
             }
-            numR = 2;
+            // If we don't have a block...
+            else {
+                // ... and there's a block ahead, pick it up.
+                if (blockAhead) {
+                    return GRAB_BLOCK;
+                }
+                // ... and there's a junction, update and continue.
+                else if (atJunction) {
+                    getUntilJunc();
+                    return FOLLOW_LINE;
+                }
+                // ... and there's nothing, continue.
+                else {
+                    return FOLLOW_LINE;
+                }
+            }
         }
-        else if (numR == 2){
+        else if (numR == 2)
+        {
+            // Set phase to 4 and spin around.
             phase = 4;
+            return spinToggleJunction();
         }
-        else {
-            return PANIC; 
-        } // End phase 3
 
     case 4: // Return home
         if (location == LOOP)
@@ -506,6 +548,7 @@ void getPhase()
 
 output_status spinToggleJunction()
 {
+    // Utility function when spinning in the loop
     // Toggle direction
     toggleDirection();
     // Update number until junction
