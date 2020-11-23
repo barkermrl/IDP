@@ -9,6 +9,7 @@ extern int start;         //a variable that calls for the start/end sequence
 extern int phase;         //the phase we are currently in
 extern int turning;       //1 if we are turning, 0 if we are not turning
 extern int counter;       //test variable
+extern bool blockAhead;   //if there is a block ahead
 
 // Current block in grabber
 enum currentBlock_status
@@ -37,7 +38,10 @@ enum location_status
     LOOP,          // In the loop with the red blocks
 };
 extern location_status location;
-#endif
 
+void getBlockAhead();
 void getAtJunction();
 void getUntilJunc();
+#endif
+
+

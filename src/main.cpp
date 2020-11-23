@@ -25,6 +25,7 @@ int numR = 0; //number of red targets delivered
 
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
+bool blockAhead = false; //if there is a block ahead
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int counter = 0;
@@ -55,6 +56,7 @@ void loop()
 {
     // Get state variables for this timestep
     //getPhase();
+    //getBlockAhead();
 
     if (turning == 0)
     {

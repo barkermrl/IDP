@@ -63,8 +63,42 @@ output_status makeDecision()
         return STOP; // End phase 2
 
     case 3: // Deliver red blocks
-        // TODO
-        return STOP; // End phase 3
+        // location must be loop
+        if (numR == 0){
+            // If there is a block ahead...
+            if (blockAhead)
+            {
+                // ... and we don't one, pick it up.
+                if (currentBlock == EMPTY)
+                {
+                    currentBlock = RED;
+                    return GRAB_BLOCK;
+                }
+                // ... and we do have one, spin around.
+                else if (currentBlock == RED)
+                {
+                    return spinToggleJunction();
+                }
+            }
+            // If we don't have a block, continue line following.
+            else {
+                return FOLLOW_LINE;
+            }
+        }
+        else if (numR == 1){
+            // If there's another block ahead, spin around
+            if (blockAhead)
+            {
+                return spinToggleJunction();
+            }
+            numR = 2;
+        }
+        else if (numR == 2){
+            phase = 4;
+        }
+        else {
+            return PANIC; 
+        } // End phase 3
 
     case 4: // Return home
         if (location == LOOP)
@@ -102,13 +136,7 @@ output_status makeDecision()
 
                 if (LMOnLine() or RMOnLine())
                 {
-                    toggleDirection();
-                    getUntilJunc();
-                    if (direction == ANTICLOCKWISE)
-                    {
-                        return SPIN_R;
-                    }
-                    return SPIN_L;
+                    return spinToggleJunction();
                 }
                 return FOLLOW_LINE;
             }
@@ -195,4 +223,18 @@ void getPhase()
     {
         phase = 5;
     }
+}
+
+output_status spinToggleJunction()
+{
+    // Toggle direction
+    toggleDirection();
+    // Update number until junction
+    getUntilJunc();
+    // spin the correct way
+    if (direction == ANTICLOCKWISE)
+    {
+        return SPIN_R;
+    }
+    return SPIN_L;
 }
