@@ -29,6 +29,10 @@ int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int counter = 0;
 int turning = 0;
+int _R = 0;             //(phase 2) 0 means spin when you see a red block and 1 means move it
+int atBlock = 0;        // 0 for no block detected, 1 for block detected by proximity
+int blockAhead = 0;   
+bool complete2 = false;  
 
 int test = 0;
 
@@ -54,7 +58,9 @@ void setup()
 void loop()
 {
     // Get state variables for this timestep
-    //getPhase();
+    getPhase();
+    detectBlock();
+    detectBlockAhead();
 
     if (turning == 0)
     {

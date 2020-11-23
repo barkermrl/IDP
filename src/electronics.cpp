@@ -197,3 +197,11 @@ int amblight()
         return 0;
     }
 }
+
+void detectBlock(){
+    atBlock = 0;
+}
+
+void detectBlockAhead(){
+    blockAhead = 0;
+}

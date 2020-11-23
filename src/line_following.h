@@ -2,6 +2,7 @@ void lf1s();
 void lf4s();
 void followCurve();
 void toggleDir();
+void skipJunc();
 
 #ifndef LS_H
 #define LS_H
