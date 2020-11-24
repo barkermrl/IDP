@@ -20,7 +20,7 @@ int numR = 0; //number of red targets delivered
 
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction
 bool atJunction = false; //currently not at a junction
-int start = 0;           //a variable that calls for the start/end sequence
+int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int _R = 0;              //(phase 2) 0 means spin when you see a red block and 1 means move it
 bool atBlock = false;    // 0 for no block detected, 1 for block detected by proximity
@@ -28,8 +28,8 @@ bool blockAhead = false; // Block detected by IR
 bool complete2 = false;  // Completed second phase
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
-location_status location = LOOP;          //Which section of the track we're in
-direction_status direction = CLOCKWISE;        //-1 for AC 1 for C.
+location_status location = HOME;          //Which section of the track we're in
+direction_status direction = NONE;        //-1 for AC 1 for C.
 output_status output;                     //Determines what the robot does at each timestep
 
 void setup()
@@ -76,12 +76,14 @@ void loop()
     case STOP:
         ML->setSpeed(0);
         MR->setSpeed(0);
+        updateLights(false);
         //Serial.println("STOP");
         break;
 
     case FINISH:
         ML->setSpeed(0);
         MR->setSpeed(0);
+        updateLights(false);
         // Get stuck in infinite while loop
         while (true)
         {
@@ -109,8 +111,6 @@ void loop()
     default:
         // By default continue following the line
         lf4s();
-        //Serial.print(colour1read());
-        //Serial.println(" ");
-        //Serial.println("Line following");
+        updateLights(true);
     }
 }

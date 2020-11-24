@@ -26,8 +26,7 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
     {
         while (RMOnLine() or LMOnLine())
         {
-            delay(1000);
-            Serial.println("Spinning");
+            delay(500);
         }
     }
 

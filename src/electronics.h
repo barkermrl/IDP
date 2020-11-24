@@ -24,5 +24,6 @@ bool amblight();
 void wait();
 void getAtblock();
 void getBlockAhead();
+void updateLights(bool moving);
 
 #endif

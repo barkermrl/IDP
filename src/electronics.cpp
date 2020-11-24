@@ -190,9 +190,7 @@ float irDistance()
 
 bool colour1read()
 {                                //reads from the colour sensor in pin 1
-    Serial.println(colour1);
     return digitalRead(colour1); //true for red, false for blue
-    Serial.println(colour1);
 }
 
 void wait()
@@ -257,5 +255,26 @@ void getAtblock()
 
 void getBlockAhead()
 {
-    blockAhead = analogRead(ir) <= 10;
+    blockAhead = (analogRead(ir) <= 10);
+}
+
+void updateLights(bool moving){
+    if (moving == true){
+        digitalWrite(LEDorange, HIGH);
+    }
+    else{
+        digitalWrite(LEDorange, LOW);
+    }
+    if (currentBlock == EMPTY){
+        digitalWrite(LEDblue, LOW);
+        digitalWrite(LEDred, LOW);
+    }
+    else if (currentBlock == BLUE){
+        digitalWrite(LEDblue, HIGH);
+        digitalWrite(LEDred, LOW);
+    }
+    else if (currentBlock == RED){
+        digitalWrite(LEDblue, LOW);
+        digitalWrite(LEDred, HIGH);
+    }
 }

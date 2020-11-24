@@ -55,291 +55,302 @@ output_status makeDecision()
 
     case 2: // Deliver blue blocks, phase starts when we reach the T junction and turn RIGHT
 
-        //While in loop:
-
-        //Searching for Blue
-        if (location == LOOP && currentBlock == EMPTY && !atBlock)
+        if (location == LOOP)
         {
-            if (!atJunction) //if you are not at a junction and do not have a block
+            if (currentBlock == EMPTY)
             {
-                return FOLLOW_LINE; //Follow line
-            }
-            if (atJunction) //if you are at a junction, skip it
-            {
-                skipJunc(); //function to determine the best way to skip a junction based on your position
-                return FOLLOW_LINE;
-            }
-        }
-
-        else if (location == LOOP && currentBlock == EMPTY && atBlock) //detected block so decide wether or not to pick up based on colour and _R
-        {
-            //PICK UP BLOCK and IDENTIFY
-            ML ->setSpeed(0);
-            MR ->setSpeed(0);
-            closeMechanism(); //Pick up block
-            if (colour1read() == false) //if its blue
-            {
-                currentBlock == BLUE; 
-                if (direction == CLOCKWISE) //Spin 
+                if (!atBlock)
                 {
-                    spin(RIGHT);
-                    direction = ANTICLOCKWISE;
-                } 
-                else //spin
-                {
-                    spin(LEFT);
-                    direction = CLOCKWISE;
+                    if (!atJunction)
+                    {
+                        return FOLLOW_LINE;
+                    }
+                    else
+                    {
+                        skipJunc();
+                        return FOLLOW_LINE;
+                    }
                 }
-                untilJunction = 2 - untilJunction; 
-            }
-            else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
-            {
-                openMechanism(); //release the block
-                _R == 1; //to pick up and move the next red block we hit
-                ML->run(BACKWARD);
-                MR->run(BACKWARD);
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(1500);  //make sure block it outside the arms
-                if (direction == CLOCKWISE) //spin
+                else
                 {
-                    spin(RIGHT);
-                    direction = ANTICLOCKWISE;
+                    for (int i = 0; i <= 500; i++)
+                    {
+                        lf4s();
+                    }
+                    ML->setSpeed(0);
+                    MR->setSpeed(0);
+                    updateLights(false);
+                    closeMechanism(); //Pick up block
+                    delay(500);
+                    if (colour1read() == false) //if its blue
+                    {
+                        currentBlock == BLUE;
+                        if (direction == CLOCKWISE) //Spin
+                        {
+                            spin(RIGHT);
+                            direction = ANTICLOCKWISE;
+                        }
+                        else //spin
+                        {
+                            spin(LEFT);
+                            direction = CLOCKWISE;
+                        }
+                        untilJunction = 2 - untilJunction;
+                        updateLights(true);
+                        return FOLLOW_LINE;
+                    }
+                    else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
+                    {
+                        openMechanism(); //release the block
+                        _R == 1;         //to pick up and move the next red block we hit
+                        ML->run(BACKWARD);
+                        MR->run(BACKWARD);
+                        ML->setSpeed(power);
+                        MR->setSpeed(power);
+                        delay(1500);                //make sure block it outside the arms
+                        if (direction == CLOCKWISE) //spin
+                        {
+                            spin(RIGHT);
+                            direction = ANTICLOCKWISE;
+                        }
+                        else //spin
+                        {
+                            spin(LEFT);
+                            direction = CLOCKWISE;
+                        }
+                        untilJunction = 2 - untilJunction;
+                        return FOLLOW_LINE;
+                    }
+                    else if (colour1read() == 1 && _R == 1) //if the block is red and you already encountered a red block
+                    {
+                        currentBlock == RED;        //pick it up
+                        if (direction == CLOCKWISE) //spin
+                        {
+                            spin(RIGHT);
+                            direction = ANTICLOCKWISE;
+                        }
+                        else //spin
+                        {
+                            spin(LEFT);
+                            direction = CLOCKWISE;
+                        }
+                        untilJunction = 2 - untilJunction;
+                        return FOLLOW_LINE;
+                    }
                 }
-                else //spin
+            }
+            else if (currentBlock == RED)
+            {
+                if (blockAhead)
                 {
-                    spin(LEFT);
-                    direction = CLOCKWISE;
-                }
-                untilJunction = 2 - untilJunction;
-                return FOLLOW_LINE;
-            }
-            else if (colour1read() == 1 && _R == 1) //if the block is red and you already encountered a red block
-            {
-                currentBlock == RED; //pick it up
-                if (direction == CLOCKWISE) //spin
-                {
-                    spin(RIGHT);
-                    direction = ANTICLOCKWISE;
-                }
-                else //spin
-                {
-                    spin(LEFT);
-                    direction = CLOCKWISE;
-                }
-                untilJunction = 2 - untilJunction;
-                return FOLLOW_LINE;
-            }
-        }
-
-        else if (location == LOOP && currentBlock == RED && !blockAhead) //if you have a red block, keep going untill u hit another block
-        {
-            if (!atJunction) 
-            {
-                return FOLLOW_LINE;
-            }
-            else //if you hit a junction, skip it
-            {
-                skipJunc();
-            }
-        }
-
-        else if (location == LOOP && currentBlock == RED && blockAhead) //if you have a read block and there is a block ahead (lrange sensor) 
-        {
-            ML->run(BACKWARD);//go back to leave space between the blocks
-            MR->run(BACKWARD);
-            ML->setSpeed(power);
-            MR->setSpeed(power);
-            delay(1000);
-            openMechanism();//release the red block
-            delay(2000);//reverse to let the block out of the area of the mechanism
-            if (direction == CLOCKWISE)//spin
-            {
-                spin(RIGHT);
-                direction = ANTICLOCKWISE;
-            }
-            else//spin
-            {
-                spin(LEFT);
-                direction = CLOCKWISE;
-            }
-            untilJunction = 2 - untilJunction;
-            currentBlock = EMPTY;
-            return FOLLOW_LINE;
-        }
-
-        else if (location == LOOP && currentBlock == BLUE) //Have the blue block, look for the junction and take it
-        {
-            if (!atJunction)
-            {
-                return FOLLOW_LINE;
-            }
-            else if (atJunction && untilJunction == 0) //if you are at the junction
-            {
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000); //pass it slightly to make spinning better
-                if (direction == ANTICLOCKWISE) //spin into tunel
-                {
-                    spin(RIGHT);
+                    ML->run(BACKWARD); //go back to leave space between the blocks
+                    MR->run(BACKWARD);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(1000);
+                    openMechanism();            //release the red block
+                    delay(2000);                //reverse to let the block out of the area of the mechanism
+                    if (direction == CLOCKWISE) //spin
+                    {
+                        spin(RIGHT);
+                        direction = ANTICLOCKWISE;
+                    }
+                    else //spin
+                    {
+                        spin(LEFT);
+                        direction = CLOCKWISE;
+                    }
+                    untilJunction = 2 - untilJunction;
+                    currentBlock = EMPTY;
                     return FOLLOW_LINE;
                 }
-                else //spin into tunnel
+                else
                 {
-                    spin(LEFT);
+                    if (!atJunction)
+                    {
+                        return FOLLOW_LINE;
+                    }
+                    else //if you hit a junction, skip it
+                    {
+                        skipJunc();
+                        return FOLLOW_LINE;
+                    }
+                }
+            }
+            else if (currentBlock == BLUE)
+            {
+                if (!atJunction)
+                {
                     return FOLLOW_LINE;
                 }
-                location = TUNNEL;
-                direction = NONE;
-            }
-            else if (atJunction && untilJunction != 0) //if you drive over a red target, skip it
-            {
-                skipJunc();
-                return FOLLOW_LINE;
+                else if (untilJunction == 0) //if you are at the junction
+                {
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000); //pass it slightly to make spinning better
+                    location = TUNNEL;
+                    if (direction == ANTICLOCKWISE) //spin into tunel
+                    {
+                        spin(RIGHT);
+                        direction = NONE;
+                        return FOLLOW_LINE;
+                    }
+                    else //spin into tunnel
+                    {
+                        spin(LEFT);
+                        direction = NONE;
+                        return FOLLOW_LINE;
+                    }
+                }
+                else if (untilJunction != 0) //if you drive over a red target, skip it
+                {
+                    skipJunc();
+                    return FOLLOW_LINE;
+                }
             }
         }
-
-        else if (location == TUNNEL && currentBlock == BLUE) //have a blue block and going through the tunnel
+        else if (location == TUNNEL)
         {
-            if (!atJunction)
+            if (currentBlock == BLUE)
             {
-                return FOLLOW_LINE;
+                if (!atJunction)
+                {
+                    return FOLLOW_LINE;
+                }
+                else //hit the curved junction
+                {
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);              // skip it then...
+                    spin(RIGHT);              //...spin right
+                    location = BLUE_DELIVERY; //set location to delivery area
+                    if (numB == 0)            //depending on how many blocks we have delivered, set the delivery target
+                    {
+                        untilJunction = 2; //deep target
+                    }
+                    else if (numB == 1) //set delivery target
+                    {
+                        untilJunction = 1; //shallow target
+                    }
+                    return FOLLOW_LINE;
+                }
             }
-            else //hit the curved junction
+            else if (currentBlock == EMPTY)
             {
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000);// skip it then...
-                spin(RIGHT);//...spin right
-                location = BLUE_DELIVERY;//set location to delivery area
-                if (numB == 0) //depending on how many blocks we have delivered, set the delivery target
+                if (!atJunction)
                 {
-                    untilJunction = 2; //deep target
+                    return FOLLOW_LINE;
                 }
-                else if (numB == 1) //set delivery target
+                else
                 {
-                    untilJunction = 1;//shallow target
+                    location = LOOP;
+                    direction = ANTICLOCKWISE;
+                    untilJunction = 2;
+                    ML->run(FORWARD);
+                    MR->run(FORWARD);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(RIGHT);
+                    if (complete2 == true)
+                    {
+                        numB = 2;
+                        complete2 = false;
+                    }
+                    _R = 0;
+                    return FOLLOW_LINE;
                 }
-                return FOLLOW_LINE;
             }
         }
-
-        else if (location == BLUE_DELIVERY && currentBlock == BLUE) //once you are in the delivery area with a blue block...
+        else if (location == BLUE_DELIVERY)
         {
-            if (!atJunction)
+            if (currentBlock == BLUE)
             {
-                return FOLLOW_LINE;
-            }
-            if (atJunction && direction == NONE) //not in the loop yet (T junction) 
-            {
-                ML->run(FORWARD);
-                MR->run(FORWARD);
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000); //go a little forward to imporve spin
-                spin(LEFT); //always spin left
-                direction = CLOCKWISE;
-                untilJunction = untilJunction - 1; //reduce untill junction by 1
-            }
-            else if (atJunction && untilJunction == 1 && direction == CLOCKWISE) //if we hit th first "junction" (target) and it is not the target
-            {
-                ML->run(FORWARD);
-                MR->run(FORWARD);
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000); //skip it and 
-                spin(RIGHT);//spin right 
-                untilJunction = untilJunction - 1;
-            }
-            else if (atJunction && untilJunction == 0)//if we hit the target junction, drop target
-            {
-                if (numB == 0) // if we have not delivered any targets before (@ deep target)
+                if (!atJunction)
+                {
+                    return FOLLOW_LINE;
+                }
+                else if (direction == NONE) //not in the loop yet (T junction)
+                {
+                    ML->run(FORWARD);
+                    MR->run(FORWARD);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000); //go a little forward to imporve spin
+                    spin(LEFT);  //always spin left
+                    direction = CLOCKWISE;
+                    untilJunction = untilJunction - 1; //reduce untill junction by 1
+                    return FOLLOW_LINE;
+                }
+                else if (untilJunction == 1) //if we hit the first "junction" (target) and it is not the target
+                {
+                    ML->run(FORWARD);
+                    MR->run(FORWARD);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000); //skip it and
+                    spin(RIGHT); //spin right
+                    untilJunction = untilJunction - 1;
+                    return FOLLOW_LINE;
+                }
+                else if (untilJunction == 0) //if we hit the target junction, drop target
                 {
                     ML->setSpeed(0);
                     MR->setSpeed(0);
+                    updateLights(false);
                     openMechanism(); //release block and update state variables
                     currentBlock = EMPTY;
-                    numB = numB + 1;
+                    if (numB == 0)
+                    {
+                        numB = numB + 1;
+                    }
+                    else if (numB == 1)
+                    {
+                        complete2 = true;
+                    }
                     ML->run(BACKWARD);
                     MR->run(BACKWARD);
+                    updateLights(true);
                     ML->setSpeed(power);
                     MR->setSpeed(power);
-                    delay(3000);
+                    delay(2000);
                     spin(RIGHT); //spin directly onto area before junction
+                    if (complete2 != true)
+                    {
+                        ML->run(BACKWARD);
+                        MR->run(BACKWARD);
+                        updateLights(true);
+                        ML->setSpeed(power);
+                        MR->setSpeed(power);
+                        delay(1500);
+                    }
                     direction = NONE;
                     untilJunction = 1;
                     return FOLLOW_LINE;
                 }
-                if (numB == 1) //if it is the shallow target, spin and adjust
-                {
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    openMechanism();
-                    currentBlock = EMPTY;
-                    complete2 = true;
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(3000);
-                    spin(RIGHT);
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2500);
-                    direction = NONE;
-                    untilJunction = 1;
-                    return FOLLOW_LINE;
-                }
-            }
-        }
-
-        else if (location == BLUE_DELIVERY && currentBlock == EMPTY) //heading back to loop
-        {
-            if (!atJunction)
-            {
-                return FOLLOW_LINE;
-            }
-            else if (atJunction && untilJunction == 1)
-            {
-                ML->run(FORWARD);
-                MR->run(FORWARD);
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000);
-                spin(RIGHT);
-                untilJunction = 0;
-                return FOLLOW_LINE;
-            }
-            else if (atJunction && untilJunction == 0)
-            {
-                location = TUNNEL;
-                return FOLLOW_LINE;
-            }
-        }
-        else if (location == TUNNEL && currentBlock == EMPTY)
-        {
-            if (!atJunction)
-            {
-                return FOLLOW_LINE;
             }
             else
             {
-                location = LOOP;
-                direction = ANTICLOCKWISE;
-                ML->run(FORWARD);
-                MR->run(FORWARD);
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000);
-                spin(RIGHT);
-                if (complete2 == true)
+                if (!atJunction)
                 {
-                    numB = 2;
+                    return FOLLOW_LINE;
                 }
-                _R = 0;
-                return FOLLOW_LINE;
+                else if (untilJunction == 1)
+                {
+                    ML->run(FORWARD);
+                    MR->run(FORWARD);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(RIGHT);
+                    untilJunction = 0;
+                    return FOLLOW_LINE;
+                }
+                else if (untilJunction == 0)
+                {
+                    location = TUNNEL;
+                    return FOLLOW_LINE;
+                }
             }
         }
 
@@ -376,13 +387,16 @@ output_status makeDecision()
         else if (numR == 1)
         {
             // If we have a block...
-            if (currentBlock == RED) {
+            if (currentBlock == RED)
+            {
                 // ...and there's a block ahead, spin around.
-                if (blockAhead) {
+                if (blockAhead)
+                {
                     return spinToggleJunction();
                 }
                 // ... and we're at a delivery target, release block.
-                else if (atJunction && untilJunction != 0){
+                else if (atJunction && untilJunction != 0)
+                {
                     // Update number of blocks delivered
                     numR = 2;
                     return RELEASE_BLOCK;
@@ -395,23 +409,28 @@ output_status makeDecision()
                     return FOLLOW_LINE;
                 }
                 // ...and nothing is ahead, keep going.
-                else {
+                else
+                {
                     return FOLLOW_LINE;
                 }
             }
             // If we don't have a block...
-            else {
+            else
+            {
                 // ... and there's a block ahead, pick it up.
-                if (blockAhead) {
+                if (blockAhead)
+                {
                     return GRAB_BLOCK;
                 }
                 // ... and there's a junction, update and continue.
-                else if (atJunction) {
+                else if (atJunction)
+                {
                     getUntilJunc();
                     return FOLLOW_LINE;
                 }
                 // ... and there's nothing, continue.
-                else {
+                else
+                {
                     return FOLLOW_LINE;
                 }
             }
