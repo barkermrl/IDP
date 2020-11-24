@@ -41,7 +41,7 @@ void openMechanism()
     myservo.write(30); //30 corresponds to fully open
 }
 
-void closeMechanism() 
+void closeMechanism()
 {
     // Opens mechanism
     if (myservo.read() == 30)
@@ -136,11 +136,14 @@ void pauseButton()
         MR->setSpeed(0);
         ML->setSpeed(0);
         closeMechanism();
-        if (colour1read() == 1){
-            while(true){
+        if (colour1read() == 1)
+        {
+            while (true)
+            {
             }
         }
-        else if (colour1read()==0){
+        else if (colour1read() == 0)
+        {
             openMechanism();
             delay(2000);
         }
@@ -198,10 +201,36 @@ int amblight()
     }
 }
 
-void detectBlock(){
+void detectBlock()
+{
     atBlock = 0;
 }
 
-void detectBlockAhead(){
+void detectBlockAhead()
+{
     blockAhead = 0;
+}
+
+void getAtblock()
+{
+    if (analogRead(srange) <= 100)
+    {
+        atBlock = 1;
+    }
+    else
+    {
+        atBlock = 0;
+    }
+}
+
+void getBlockAhead()
+{
+    if (analogRead(lrange) <= 100)
+    {
+        blockAhead = 1;
+    }
+    else
+    {
+        blockAhead = 0;
+    }
 }
