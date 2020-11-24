@@ -11,12 +11,12 @@
 #define ls3 5 //RM
 #define ls4 4 //R
 
-#define colour1 1        //colour sensor 1
+#define colour1 1 //colour sensor 1
 // #define colour2 1        //colour sensor 2
-#define ambLightSensor 2 //Ambient light sensor
+#define ambLightSensor 3 //Ambient light sensor
 
 #define ir A0       // IR sensor
-#define proximity 3 // Proximity
+#define proximity 2 // Proximity
 
 // Defining interrupt
 #define interruptPin 13
@@ -73,6 +73,18 @@ void electronics_setup()
     pinMode(LEDblue, OUTPUT);
     pinMode(LEDred, OUTPUT);
     myservo.attach(servopin);
+
+    digitalWrite(LEDorange, HIGH);
+    delay(1000);
+    digitalWrite(LEDred, HIGH);
+    delay(1000);
+    digitalWrite(LEDblue, HIGH);
+    delay(1000);
+    digitalWrite(LEDorange, LOW);
+    delay(1000);
+    digitalWrite(LEDred, LOW);
+    delay(1000);
+    digitalWrite(LEDblue, LOW);
 
     openMechanism();
 }
@@ -178,12 +190,13 @@ float irDistance()
 
 bool colour1read()
 {                                //reads from the colour sensor in pin 1
-    return digitalRead(colour1); //1 for red, 0 for blue
+    Serial.println(colour1);
+    return digitalRead(colour1); //true for red, false for blue
+    Serial.println(colour1);
 }
 
 void wait()
 {
-    Serial.println("Start waiting");
     // Doesn't start until button is pressed
     while (digitalRead(interruptPin))
     {
@@ -191,31 +204,32 @@ void wait()
         Serial.println(digitalRead(proximity));
         if (colour1read() == false)
         {
-            digitalWrite(LEDblue, HIGH);
+            digitalWrite(LEDorange, LOW);
         }
         else
-        {
-            digitalWrite(LEDblue, LOW);
-        }
-
-        // IR sensor
-        if (irDistance() < 15.0)
         {
             digitalWrite(LEDorange, HIGH);
         }
+
+        // IR sensor
+        if (irDistance() < 10)
+        {
+            digitalWrite(LEDred, HIGH);
+            delay(100);
+        }
         else
         {
-            digitalWrite(LEDorange, LOW);
+            digitalWrite(LEDred, LOW);
         }
 
         // Proximity sensor
         if (digitalRead(proximity))
         {
-            digitalWrite(LEDred, HIGH);
+            digitalWrite(LEDblue, HIGH);
         }
         else
         {
-            digitalWrite(LEDred, LOW);
+            digitalWrite(LEDblue, LOW);
         }
     }
     // Turn off all LEDs
@@ -243,5 +257,5 @@ void getAtblock()
 
 void getBlockAhead()
 {
-    blockAhead = analogRead(ir) <= 15;
+    blockAhead = analogRead(ir) <= 10;
 }

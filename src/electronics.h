@@ -22,5 +22,7 @@ void closeMechanism();
 bool colour1read();
 bool amblight();
 void wait();
+void getAtblock();
+void getBlockAhead();
 
 #endif

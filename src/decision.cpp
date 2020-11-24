@@ -44,7 +44,7 @@ output_status makeDecision()
         {
             MR->setSpeed(power);
             ML->setSpeed(power);
-            delay(2000);
+            delay(3000);
             spin(RIGHT);
             direction = ANTICLOCKWISE;
             untilJunction = 2;
@@ -74,6 +74,8 @@ output_status makeDecision()
         else if (location == LOOP && currentBlock == EMPTY && atBlock) //detected block so decide wether or not to pick up based on colour and _R
         {
             //PICK UP BLOCK and IDENTIFY
+            ML ->setSpeed(0);
+            MR ->setSpeed(0);
             closeMechanism(); //Pick up block
             if (colour1read() == false) //if its blue
             {
@@ -98,7 +100,7 @@ output_status makeDecision()
                 MR->run(BACKWARD);
                 ML->setSpeed(power);
                 MR->setSpeed(power);
-                delay(3000);  //make sure block it outside the arms
+                delay(1500);  //make sure block it outside the arms
                 if (direction == CLOCKWISE) //spin
                 {
                     spin(RIGHT);
