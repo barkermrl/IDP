@@ -45,6 +45,7 @@ void setup()
     electronics_setup();
     // Wait until button is pressed
     wait();
+    Serial.println("stop waiting");
     // Set speed of motors to initial value
     updateSpeed();
 }
@@ -53,8 +54,6 @@ void loop()
 {
     // Get state variables for this timestep
     getPhase();
-    detectBlock();
-    detectBlockAhead();
 
     // Get output from the decision making process
     output = makeDecision();

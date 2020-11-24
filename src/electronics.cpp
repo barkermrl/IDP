@@ -11,12 +11,12 @@
 #define ls3 5 //RM
 #define ls4 4 //R
 
-#define colour1 0        //colour sensor 1
-#define colour2 1        //colour sensor 2
-#define ambLightSensor 3 //Ambient light sensor
+#define colour1 1        //colour sensor 1
+// #define colour2 1        //colour sensor 2
+#define ambLightSensor 2 //Ambient light sensor
 
 #define ir A0       // IR sensor
-#define proximity 2 // Proximity
+#define proximity 3 // Proximity
 
 // Defining interrupt
 #define interruptPin 13
@@ -65,10 +65,13 @@ void electronics_setup()
     pinMode(LED_BUILTIN, OUTPUT); //builtin LED
 
     pinMode(colour1, INPUT);
-    pinMode(colour2, INPUT);
+    // pinMode(colour2, INPUT);
     pinMode(proximity, INPUT);
     pinMode(ambLightSensor, INPUT);
 
+    pinMode(LEDorange, OUTPUT);
+    pinMode(LEDblue, OUTPUT);
+    pinMode(LEDred, OUTPUT);
     myservo.attach(servopin);
 
     openMechanism();
@@ -88,6 +91,7 @@ bool RMOnLine()
 {
     return (digitalRead(ls3) == HIGH);
 }
+
 bool ROnLine()
 {
     return (digitalRead(ls4) == HIGH);
@@ -179,11 +183,13 @@ bool colour1read()
 
 void wait()
 {
+    Serial.println("Start waiting");
     // Doesn't start until button is pressed
     while (digitalRead(interruptPin))
     {
         // Ambient light
-        if (amblight())
+        Serial.println(digitalRead(proximity));
+        if (colour1read() == false)
         {
             digitalWrite(LEDblue, HIGH);
         }
@@ -228,16 +234,6 @@ bool amblight()
     {
         return false;
     }
-}
-
-void detectBlock()
-{
-    atBlock = 0;
-}
-
-void detectBlockAhead()
-{
-    blockAhead = 0;
 }
 
 void getAtblock()

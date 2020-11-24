@@ -75,7 +75,7 @@ output_status makeDecision()
         {
             //PICK UP BLOCK and IDENTIFY
             closeMechanism(); //Pick up block
-            if (colour1read() == 0) //if its blue
+            if (colour1read() == false) //if its blue
             {
                 currentBlock == BLUE; 
                 if (direction == CLOCKWISE) //Spin 
@@ -90,7 +90,7 @@ output_status makeDecision()
                 }
                 untilJunction = 2 - untilJunction; 
             }
-            else if (colour1read() == 1 && _R == 0) //if its red and you havent already hit a red block
+            else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
             {
                 openMechanism(); //release the block
                 _R == 1; //to pick up and move the next red block we hit

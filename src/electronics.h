@@ -1,7 +1,8 @@
-#include <Arduino.h>
-#include <Adafruit_MotorShield.h>
 #ifndef ELECTRONICS_H
 #define ELECTRONICS_H
+
+#include <Arduino.h>
+#include <Adafruit_MotorShield.h>
 
 //Defining Motors:
 extern Adafruit_MotorShield AFMS;
@@ -20,8 +21,6 @@ void openMechanism();
 void closeMechanism();
 bool colour1read();
 bool amblight();
-void detectBlock();
-void detectBlockAhead();
 void wait();
 
 #endif

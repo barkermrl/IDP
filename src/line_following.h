@@ -1,12 +1,11 @@
+#ifndef LS_H
+#define LS_H
+
 void lf1s();
 void lf4s();
 void followCurve();
 void toggleDir();
 void skipJunc();
-
-#ifndef LS_H
-#define LS_H
-
 // 4 sensor line following
 extern double kw;
 enum dir_status

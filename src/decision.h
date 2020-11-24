@@ -13,10 +13,12 @@ enum output_status
     FINISH,
     TEST,
 };
-#endif
 
 output_status makeDecision();
 output_status spinToggleJunction();
 void getPhase();
 void toggleDirection();
+#endif
+
+
 
