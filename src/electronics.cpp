@@ -15,14 +15,14 @@
 #define colour2 1        //colour sensor 2
 #define ambLightSensor 3 //Ambient light sensor
 
-#define srange 2  // Long range sensor
-#define lrange A0 // Short range sensor
+#define ir A0       // IR sensor
+#define proximity 2 // Proximity
 
 // Defining interrupt
 #define interruptPin 13
 
-#define LEDblue 10
-#define LEDoragne 11
+#define LEDblue 11
+#define LEDorange 10
 #define LEDred 12
 
 #define servopin 9 // Servo pin
@@ -66,7 +66,7 @@ void electronics_setup()
 
     pinMode(colour1, INPUT);
     pinMode(colour2, INPUT);
-    pinMode(srange, INPUT);
+    pinMode(proximity, INPUT);
     pinMode(ambLightSensor, INPUT);
 
     myservo.attach(servopin);
@@ -163,41 +163,70 @@ void pauseButton()
     }
 }
 
-float lrangeDistance()
-{
-    // long range distance reading
-    // returns an integer giving the distance reading in mm
-
-    /***********************
-    TODO
-    ***********************/
-
-    return analogRead(lrange);
-}
-
-float srangeDistance()
+float irDistance()
 {
     // short range distance reading
-    // returns an integer giving the distance reading in mm
+    // returns an integer giving the distance reading in cm
     float distance;
-    distance = -4.9261 + 33.4525 / (float(analogRead(srange) * 5) / 1024);
+    distance = -4.9261 + 33.4525 / (float(analogRead(ir) * 5) / 1024);
     return distance;
 }
 
-int colour1read()
+bool colour1read()
 {                                //reads from the colour sensor in pin 1
-    return digitalRead(colour2); //1 for red, 0 for blue
+    return digitalRead(colour1); //1 for red, 0 for blue
 }
 
-int amblight()
-{ //ambient light sensor. 1 if high light, 0 if low light
-    if (digitalRead(ambLightSensor) == 0)
+void wait()
+{
+    // Doesn't start until button is pressed
+    while (digitalRead(interruptPin))
     {
-        return 1;
+        // Ambient light
+        if (amblight())
+        {
+            digitalWrite(LEDblue, HIGH);
+        }
+        else
+        {
+            digitalWrite(LEDblue, LOW);
+        }
+
+        // IR sensor
+        if (irDistance() < 15.0)
+        {
+            digitalWrite(LEDorange, HIGH);
+        }
+        else
+        {
+            digitalWrite(LEDorange, LOW);
+        }
+
+        // Proximity sensor
+        if (digitalRead(proximity))
+        {
+            digitalWrite(LEDred, HIGH);
+        }
+        else
+        {
+            digitalWrite(LEDred, LOW);
+        }
+    }
+    // Turn off all LEDs
+    digitalWrite(LEDred, LOW);
+    digitalWrite(LEDblue, LOW);
+    digitalWrite(LEDorange, LOW);
+}
+
+bool amblight()
+{ //ambient light sensor. 1 if high light, 0 if low light
+    if (digitalRead(ambLightSensor) == false)
+    {
+        return true;
     }
     else
     {
-        return 0;
+        return false;
     }
 }
 
@@ -213,24 +242,10 @@ void detectBlockAhead()
 
 void getAtblock()
 {
-    if (analogRead(srange) <= 100)
-    {
-        atBlock = 1;
-    }
-    else
-    {
-        atBlock = 0;
-    }
+    atBlock = digitalRead(proximity);
 }
 
 void getBlockAhead()
 {
-    if (analogRead(lrange) <= 100)
-    {
-        blockAhead = 1;
-    }
-    else
-    {
-        blockAhead = 0;
-    }
+    blockAhead = analogRead(ir) <= 15;
 }

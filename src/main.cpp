@@ -9,12 +9,7 @@
 // General variables controlling robot behaviour
 double kw = 20;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
 const int kw_min = kw; //set kw_min to kw for development
-int kp = 10;           //proportional coeff for control using running averages
 int power = 100;       //average speed of motors
-
-// Variables for the single sensor line follower:
-bool change = true; //Whether or not the robot should change directions when hitting the black
-bool junc = false;  //Whether the robot is at a junction (LEGACY)
 
 // Variables for 4 sensor line follower:
 dir_status dir = L; //1 corresponds to left, -1 to right
@@ -27,13 +22,10 @@ int untilJunction = 0;   //number of "junction detections" until we actually hit
 bool atJunction = false; //currently not at a junction
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
-int counter = 0;         // WHAT DOES THIS DO?
-bool turning = 0;        // WHAT DOES THIS DO?
 int _R = 0;              //(phase 2) 0 means spin when you see a red block and 1 means move it
 bool atBlock = false;    // 0 for no block detected, 1 for block detected by proximity
-bool blockAhead = false;
-bool complete2 = false;
-int test = 0;
+bool blockAhead = false; // Block detected by IR
+bool complete2 = false;  // Completed second phase
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY)
 location_status location = HOME;          //Which section of the track we're in
@@ -49,8 +41,11 @@ void setup()
     MR->run(FORWARD);
     ML->run(FORWARD);
 
+    // Update electronics
     electronics_setup();
-    delay(5000);
+    // Wait until button is pressed
+    wait();
+    // Set speed of motors to initial value
     updateSpeed();
 }
 
@@ -61,15 +56,8 @@ void loop()
     detectBlock();
     detectBlockAhead();
 
-    if (turning)
-    {
-        getAtJunction();
-    }
-
     // Get output from the decision making process
-    //output = makeDecision();
-    counter++;
-    output = FOLLOW_LINE;
+    output = makeDecision();
     // Switch case to call the correct output
     switch (output)
     {
@@ -124,7 +112,4 @@ void loop()
         //Serial.println(" ");
         //Serial.println("Line following");
     }
-
-    // Check the interrupt
-    pauseButton();
 }

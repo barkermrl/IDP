@@ -5,61 +5,6 @@
 #include "state.h"
 #define turnThresh 200
 
-void lf1s()
-{
-    //Single swtich
-    if (LMOnLine() && change == false)
-    {
-        delay(10);
-        if (LMOnLine())
-        { //to make sure the "low" reading isnt a sudden random drop
-            ML->setSpeed(power + kw * dir);
-            MR->setSpeed(power - kw * dir);
-            change = true;
-        }
-    }
-    if (LMOnLine() && change == true)
-    {
-        if (kw <= power)
-        {
-            kw = kw + 0.5;
-            ML->setSpeed(power + kw * dir);
-            MR->setSpeed(power - kw * dir);
-        }
-    }
-
-    if (!LMOnLine() && change == true)
-    {
-        delay(10);
-        if (!LMOnLine())
-        { //to make sure the "high" reading isnt a sudden random spike
-            toggleDir();
-            kw = kw_min;
-            ML->setSpeed(power + kw * dir);
-            MR->setSpeed(power - kw * dir);
-            change = false;
-            delay(50);
-        }
-    }
-}
-
-void followCurve() //function to disable junction detection on the curve if the kw crosses a threshold is too high
-{
-    if (counter > 100)
-    {
-        //Serial.println("JUNC SENSING ON");
-        counter = 0;
-        turning = false;
-        Serial.println("JUNC SENSING ON");
-    }
-    if (kw >= turnThresh)
-    {
-        Serial.println("JUNC SENSING OFF");
-        turning = true;
-        counter = 0;
-    }
-}
-
 void lf4s()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
