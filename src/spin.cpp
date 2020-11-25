@@ -25,12 +25,12 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
 
     if (!(RMOnLine() or LMOnLine()) && location == LOOP) // off the line and in loop
     {
-        delay(1000);
+        delay(500);
     }
 
     while (RMOnLine() or LMOnLine()) // now on line
     {
-        delay(1000);
+        delay(500);
     }
  
 

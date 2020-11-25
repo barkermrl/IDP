@@ -8,22 +8,46 @@
 void lf4s()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
-    if (dir == R && LMOnLine())
+    if (dir == R && (LMOnLine() or (kw > 150 && location != TUNNEL) or (kw > 100 && location == TUNNEL)))
     {
         toggleDir();
+
         kw = kw_min;
+
         updateSpeed();
     }
-    if (dir == L && RMOnLine())
+    if (dir == L && (RMOnLine() or (kw > 150 && location != TUNNEL) or (kw > 100 && location == TUNNEL)))
     {
-        kw = kw_min;
+        if (location == TUNNEL or BLUE_DELIVERY)
+        {
+            kw = 20;
+        }
+        else
+        {
+            kw = kw_min;
+        }
         toggleDir();
         updateSpeed();
     }
     else
     {
         //followCurve();
-        kw = kw + 0.7;
+        if (location == LOOP)
+        {
+            kw = kw + 0.5;
+        }
+        else if (location == HOME)
+        {
+            kw = kw + 0.7;
+        }
+        else if (location == TUNNEL)
+        {
+            kw = kw + 0.2;
+        }
+        if (kw > 250 && location != TUNNEL)
+        {
+            Serial.print("off line");
+        }
         updateSpeed();
         // Serial.println(kw);
     }
@@ -57,8 +81,9 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                delay(1000);
+                delay(2000);
                 spin(LEFT);
+                lf4s();
             }
             else
             {
@@ -70,10 +95,11 @@ void skipJunc()
                 }
             }
         }
-        if (untilJunction == 1)
+        else if (untilJunction == 1)
         {
             untilJunction = untilJunction - 1;
-            if (direction == ANTICLOCKWISE){
+            if (direction == ANTICLOCKWISE)
+            {
                 MR->setSpeed(power);
                 ML->setSpeed(power);
                 while (atJunction)
@@ -81,25 +107,28 @@ void skipJunc()
                     getAtJunction();
                 }
             }
-            if (direction == CLOCKWISE){
+            if (direction == CLOCKWISE)
+            {
                 MR->setSpeed(power);
                 ML->setSpeed(power);
                 while (atJunction)
                 {
                     getAtJunction();
                 }
-                delay(1000);
+                delay(2000);
                 spin(RIGHT);
             }
         }
-        if (untilJunction == 0){
-                untilJunction = 2;
-                MR->setSpeed(power);
-                ML->setSpeed(power);
-                while (atJunction)
-                {
-                    getAtJunction();
-                }
+        else if (untilJunction == 0)
+        {
+            MR->setSpeed(power);
+            ML->setSpeed(power);
+            while (atJunction)
+            {
+                getAtJunction();
+            }
+            lf4s();
+            untilJunction = 2;
         }
     }
 }

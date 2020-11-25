@@ -209,7 +209,7 @@ void wait()
         }
 
         // IR sensor
-        if (irDistance() < 8)
+        if (irDistance() < 7)
         {
             digitalWrite(LEDred, HIGH);
             delay(100);

@@ -37,7 +37,7 @@ output_status makeDecision()
 
             ML->setSpeed(power);
             MR->setSpeed(power);
-            delay(2000);
+            delay(1500);
             spin(RIGHT);
             updateSpeed();
             return FOLLOW_LINE;
@@ -47,7 +47,7 @@ output_status makeDecision()
             Serial.println("Phase 1: At 3rd junction, entering the loop");
             MR->setSpeed(power);
             ML->setSpeed(power);
-            delay(4000);
+            delay(2000);
             spin(RIGHT);
             direction = ANTICLOCKWISE;
             untilJunction = 2;
@@ -90,6 +90,11 @@ output_status makeDecision()
                     {
                         Serial.println("Phase 2: Identify blue block");
                         currentBlock = BLUE;
+                        updateLights(true);
+                        for (int i = 0; i < 3000; i++)
+                        {
+                            lf4s();
+                        }
                         if (direction == CLOCKWISE) //Spin
                         {
                             spin(RIGHT);
@@ -100,23 +105,25 @@ output_status makeDecision()
                             spin(LEFT);
                             direction = CLOCKWISE;
                         }
+                        updateLights(true);
                         Serial.println("Phase 2: Done spinning (have block)");
                         untilJunction = 2 - untilJunction;
                         Serial.print("Until junction: ");
                         Serial.println(untilJunction);
-                        updateLights(true);
+
                         return FOLLOW_LINE;
                     }
                     else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
                     {
                         Serial.println("Phase 2: Identify red block");
                         openMechanism(); //release the block
-                        _R == 1;         //to pick up and move the next red block we hit
+                        _R = 1;          //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
                         ML->setSpeed(power);
                         MR->setSpeed(power);
-                        delay(1500);                //make sure block it outside the arms
+                        delay(1000); //make sure block it outside the arms
+
                         if (direction == CLOCKWISE) //spin
                         {
                             spin(RIGHT);
@@ -130,10 +137,16 @@ output_status makeDecision()
                         untilJunction = 2 - untilJunction;
                         return FOLLOW_LINE;
                     }
-                    else if (colour1read() == 1 && _R == 1) //if the block is red and you already encountered a red block
+
+                    else if (colour1read() == true && _R == 1) //if the block is red and you already encountered a red block
                     {
                         Serial.println("Phase 2: Identify 2nd red block");
-                        currentBlock == RED;        //pick it up
+                        currentBlock = RED; //pick it up
+                        updateLights(true);
+                        for (int i = 0; i < 3000; i++)
+                        {
+                            lf4s();
+                        }
                         if (direction == CLOCKWISE) //spin
                         {
                             spin(RIGHT);
@@ -180,10 +193,39 @@ output_status makeDecision()
                     {
                         return FOLLOW_LINE;
                     }
-                    else //if you hit a junction, skip it
+                    else if (untilJunction != 0) //if you hit a junction, skip it
                     {
                         skipJunc();
                         return FOLLOW_LINE;
+                    }
+                    else
+                    {
+                        untilJunction = 2;
+                        for (int i = 0; i <= 3000; i++)
+                        {
+                            lf4s();
+                        }
+                        ML->setSpeed(0);
+                        MR->setSpeed(0);
+                        openMechanism();
+                        currentBlock = EMPTY;
+                        updateLights(true);
+                        ML->run(BACKWARD);
+                        MR->run(BACKWARD);
+                        ML->setSpeed(power);
+                        MR->setSpeed(power);
+                        delay(1000);
+                        if (direction == CLOCKWISE) //spin
+                        {
+                            spin(RIGHT);
+                            direction = ANTICLOCKWISE;
+                        }
+                        else //spin
+                        {
+                            spin(LEFT);
+                            direction = CLOCKWISE;
+                        }
+                        untilJunction = 2;
                     }
                 }
             }
@@ -198,7 +240,18 @@ output_status makeDecision()
                     Serial.println("Phase 2: T-junction (have blue)");
                     ML->setSpeed(power);
                     MR->setSpeed(power);
-                    delay(2000); //pass it slightly to make spinning better
+                    while (atJunction)
+                    {
+                        getAtJunction();
+                        for (int i = 0; i < 100; i++)
+                        {
+                            lf4s();
+                        }
+                    }
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(1000);
+                    //pass it slightly to make spinning better
                     location = TUNNEL;
                     if (direction == ANTICLOCKWISE) //spin into tunel
                     {
@@ -214,7 +267,6 @@ output_status makeDecision()
                         Serial.println("Phase 2: Spinning into T-junction (have block)");
                         return FOLLOW_LINE;
                     }
-                    
                 }
                 else if (untilJunction != 0) //if you drive over a red target, skip it
                 {
