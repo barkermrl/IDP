@@ -13,7 +13,7 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
         ML->run(BACKWARD);
         ML->setSpeed(power);
         MR->setSpeed(power);
-        Serial.println("started Spinning");
+        Serial.println("Started Spinning Left");
     }
     else //spinning to the right
     {
@@ -22,13 +22,17 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
         ML->setSpeed(power);
         MR->setSpeed(power);
     }
-    if (RMOnLine() or LMOnLine())
+
+    if (!(RMOnLine() or LMOnLine()) && location == LOOP) // off the line and in loop
     {
-        while (RMOnLine() or LMOnLine())
-        {
-            delay(500);
-        }
+        delay(1000);
     }
+
+    while (RMOnLine() or LMOnLine()) // now on line
+    {
+        delay(1000);
+    }
+ 
 
     while (true)
     {

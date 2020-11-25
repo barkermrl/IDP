@@ -7,9 +7,9 @@
 #include <Servo.h>
 
 // General variables controlling robot behaviour
-double kw = 0;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
+double kw = 20;        //oscilatory coeff for control using single sensor. Higher kw causes higher oscilations
 const int kw_min = kw; //set kw_min to kw for development
-int power = 70;       //average speed of motors
+int power = 120;       //average speed of motors
 
 // Variables for 4 sensor line follower:
 dir_status dir = L; //1 corresponds to left, -1 to right

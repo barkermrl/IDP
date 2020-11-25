@@ -199,7 +199,6 @@ void wait()
     while (digitalRead(interruptPin))
     {
         // Ambient light
-        Serial.println(digitalRead(proximity));
         if (colour1read() == false)
         {
             digitalWrite(LEDorange, LOW);
@@ -210,7 +209,7 @@ void wait()
         }
 
         // IR sensor
-        if (irDistance() < 10)
+        if (irDistance() < 8)
         {
             digitalWrite(LEDred, HIGH);
             delay(100);
