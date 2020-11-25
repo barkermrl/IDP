@@ -91,7 +91,7 @@ output_status makeDecision()
                         Serial.println("Phase 2: Identify blue block");
                         currentBlock = BLUE;
                         updateLights(true);
-                        for (int i = 0; i < 3000; i++)
+                        for (int i = 0; i < 1000; i++)
                         {
                             lf4s();
                         }
@@ -143,7 +143,7 @@ output_status makeDecision()
                         Serial.println("Phase 2: Identify 2nd red block");
                         currentBlock = RED; //pick it up
                         updateLights(true);
-                        for (int i = 0; i < 3000; i++)
+                        for (int i = 0; i < 1000; i++)
                         {
                             lf4s();
                         }
@@ -346,7 +346,8 @@ output_status makeDecision()
                     MR->setSpeed(power);
                     delay(2000);
                     spin(RIGHT);
-                    while (!atJunction){
+                    while (!atJunction)
+                    {
                         lf4s();
                         getAtJunction();
                     }
@@ -356,22 +357,44 @@ output_status makeDecision()
                     currentBlock = EMPTY;
                     numB = 1;
                     updateLights(true);
-                    ML ->run(BACKWARD);
-                    MR ->run(BACKWARD);
-                    ML -> setSpeed(power);
-                    MR -> setSpeed(0);
+                    ML->run(BACKWARD);
+                    MR->run(BACKWARD);
+                    ML->setSpeed(150);
+                    MR->setSpeed(0);
                     delay(3000);
                     spin(LEFT);
                 }
-                else if (numB == 1){
-
+                else if (numB == 1)
+                {
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(LEFT);
+                    while (!atJunction)
+                    {
+                        lf4s();
+                        getAtJunction();
+                    }
+                    ML->setSpeed(0);
+                    MR->setSpeed(0);
+                    openMechanism();
+                    currentBlock = EMPTY;
+                    complete2 = true;
+                    ML->run(BACKWARD);
+                    MR->run(BACKWARD);
+                    ML->setSpeed(150);
+                    MR->setSpeed(0);
+                    delay(2000);
+                    spin(LEFT);
+                    
                 }
                 while (!atJunction)
                 {
                     lf4s();
                     getAtJunction();
                 }
-                if (complete2 == true){
+                if (complete2 == true)
+                {
                     ML->setSpeed(power);
                     MR->setSpeed(power);
                     delay(2000);
@@ -379,15 +402,20 @@ output_status makeDecision()
                     numB = 2;
                     numR = 2;
                     location = HOME;
+                    return FOLLOW_LINE;
                 }
-                else if(numB == 1){
+                else
+                {
+                    
+                }
+                else if (numB == 1)
+                {
                     ML->setSpeed(power);
                     MR->setSpeed(power);
                     delay(2000);
                     spin(LEFT);
                 }
 
-                
                 // else if (direction == NONE) //not in the loop yet (T junction)
                 // {
                 //     ML->run(FORWARD);

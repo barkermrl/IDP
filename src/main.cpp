@@ -91,21 +91,8 @@ void loop()
         };
     case TEST:
     {
-        lf4s();
-        getAtJunction();
-        if (atJunction == true)
-        {
-            ML->setSpeed(0);
-            MR->setSpeed(0);
-            openMechanism();
-            ML->run(BACKWARD);
-            MR->run(BACKWARD);
-            ML->setSpeed(power);
-            MR->setSpeed(power);
-            delay(5000);
-            ML->setSpeed(0);
-            MR->setSpeed(0);
-        }
+        Serial.print(colour1read());
+        Serial.print(digitalRead(2));
     }
     default:
         // By default continue following the line
