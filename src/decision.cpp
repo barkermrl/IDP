@@ -336,64 +336,116 @@ output_status makeDecision()
                 {
                     return FOLLOW_LINE;
                 }
-                else if (direction == NONE) //not in the loop yet (T junction)
+                else if (numB == 0)
                 {
-                    ML->run(FORWARD);
-                    MR->run(FORWARD);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000); //go a little forward to imporve spin
-                    spin(LEFT);  //always spin left
-                    direction = CLOCKWISE;
-                    untilJunction = untilJunction - 1; //reduce untill junction by 1
-                    return FOLLOW_LINE;
-                }
-                else if (untilJunction == 1) //if we hit the first "junction" (target) and it is not the target
-                {
-                    ML->run(FORWARD);
-                    MR->run(FORWARD);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000); //skip it and
-                    spin(RIGHT); //spin right
-                    untilJunction = untilJunction - 1;
-                    return FOLLOW_LINE;
-                }
-                else if (untilJunction == 0) //if we hit the target junction, drop target
-                {
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    updateLights(false);
-                    openMechanism(); //release block and update state variables
-                    currentBlock = EMPTY;
-                    if (numB == 0)
-                    {
-                        numB = numB + 1;
-                    }
-                    else if (numB == 1)
-                    {
-                        complete2 = true;
-                    }
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    updateLights(true);
                     ML->setSpeed(power);
                     MR->setSpeed(power);
                     delay(2000);
-                    spin(RIGHT); //spin directly onto area before junction
-                    if (complete2 != true)
-                    {
-                        ML->run(BACKWARD);
-                        MR->run(BACKWARD);
-                        updateLights(true);
-                        ML->setSpeed(power);
-                        MR->setSpeed(power);
-                        delay(1500);
+                    spin(LEFT);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(RIGHT);
+                    while (!atJunction){
+                        lf4s();
+                        getAtJunction();
                     }
-                    direction = NONE;
-                    untilJunction = 1;
-                    return FOLLOW_LINE;
+                    ML->setSpeed(0);
+                    MR->setSpeed(0);
+                    openMechanism();
+                    currentBlock = EMPTY;
+                    numB = 1;
+                    updateLights(true);
+                    ML ->run(BACKWARD);
+                    MR ->run(BACKWARD);
+                    ML -> setSpeed(power);
+                    MR -> setSpeed(0);
+                    delay(3000);
+                    spin(LEFT);
                 }
+                else if (numB == 1){
+
+                }
+                while (!atJunction)
+                {
+                    lf4s();
+                    getAtJunction();
+                }
+                if (complete2 == true){
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(RIGHT);
+                    numB = 2;
+                    numR = 2;
+                    location = HOME;
+                }
+                else if(numB == 1){
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(2000);
+                    spin(LEFT);
+                }
+
+                
+                // else if (direction == NONE) //not in the loop yet (T junction)
+                // {
+                //     ML->run(FORWARD);
+                //     MR->run(FORWARD);
+                //     ML->setSpeed(power);
+                //     MR->setSpeed(power);
+                //     delay(2000); //go a little forward to imporve spin
+                //     spin(LEFT);  //always spin left
+                //     direction = CLOCKWISE;
+                //     untilJunction = untilJunction - 1; //reduce untill junction by 1
+                //     return FOLLOW_LINE;
+                // }
+                // else if (untilJunction == 1) //if we hit the first "junction" (target) and it is not the target
+                // {
+                //     ML->run(FORWARD);
+                //     MR->run(FORWARD);
+                //     ML->setSpeed(power);
+                //     MR->setSpeed(power);
+                //     delay(2000); //skip it and
+                //     spin(RIGHT); //spin right
+                //     untilJunction = untilJunction - 1;
+                //     return FOLLOW_LINE;
+                // }
+                // else if (untilJunction == 0) //if we hit the target junction, drop target
+                // {
+                //     ML->setSpeed(0);
+                //     MR->setSpeed(0);
+                //     updateLights(false);
+                //     openMechanism(); //release block and update state variables
+                //     currentBlock = EMPTY;
+                //     if (numB == 0)
+                //     {
+                //         numB = numB + 1;
+                //     }
+                //     else if (numB == 1)
+                //     {
+                //         complete2 = true;
+                //     }
+                //     ML->run(BACKWARD);
+                //     MR->run(BACKWARD);
+                //     updateLights(true);
+                //     ML->setSpeed(power);
+                //     MR->setSpeed(power);
+                //     delay(2000);
+                //     spin(RIGHT); //spin directly onto area before junction
+                //     if (complete2 != true)
+                //     {
+                //         ML->run(BACKWARD);
+                //         MR->run(BACKWARD);
+                //         updateLights(true);
+                //         ML->setSpeed(power);
+                //         MR->setSpeed(power);
+                //         delay(1500);
+                //     }
+                //     direction = NONE;
+                //     untilJunction = 1;
+                //     return FOLLOW_LINE;
+                // }
             }
             else
             {
