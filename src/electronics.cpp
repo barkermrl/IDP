@@ -111,15 +111,12 @@ bool ROnLine()
 
 void updateSpeed()
 {
-    //Serial.println("Update speed");
     if ((power - kw * dir) > 255)
     {
         ML->setSpeed(255);
     }
     else if ((power - kw * dir) < 0)
     {
-        //ML -> run(BACKWARD);
-        //ML->setSpeed(abs(power - kw * dir));
         ML->setSpeed(0);
     }
     else
@@ -133,8 +130,6 @@ void updateSpeed()
     }
     else if ((power + kw * dir) < 0)
     {
-        // MR -> run(BACKWARD);
-        // MR->setSpeed(abs(power + kw * dir));
         MR->setSpeed(0);
     }
     else

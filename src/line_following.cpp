@@ -8,17 +8,22 @@
 void lf4s()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
-    if (dir == R && (LMOnLine() or (kw > 150 && location != TUNNEL) or (kw > 100 && location == TUNNEL)))
+    if (dir == R && (LMOnLine() /*or (kw > 150 && location != TUNNEL)*/ or (kw > 100 && location == TUNNEL)))
     {
+        if (location == TUNNEL or location == BLUE_DELIVERY)
+        {
+            kw = 20;
+        }
+        else
+        {
+            kw = kw_min;
+        }
         toggleDir();
-
-        kw = kw_min;
-
         updateSpeed();
     }
-    if (dir == L && (RMOnLine() or (kw > 150 && location != TUNNEL) or (kw > 100 && location == TUNNEL)))
+    if (dir == L && (RMOnLine() /*or (kw > 150 && location != TUNNEL)*/ or (kw > 100 && location == TUNNEL)))
     {
-        if (location == TUNNEL or BLUE_DELIVERY)
+        if (location == TUNNEL or location == BLUE_DELIVERY)
         {
             kw = 20;
         }
@@ -44,9 +49,13 @@ void lf4s()
         {
             kw = kw + 0.2;
         }
+        else if (location == BLUE_DELIVERY)
+        {
+            kw = kw + 0.5;
+        }
         if (kw > 250 && location != TUNNEL)
         {
-            Serial.print("off line");
+            //Serial.print("off line");
         }
         updateSpeed();
         // Serial.println(kw);
@@ -93,6 +102,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
+                lf4s();
             }
         }
         else if (untilJunction == 1)
@@ -106,8 +116,9 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
+                lf4s();
             }
-            if (direction == CLOCKWISE)
+            else if (direction == CLOCKWISE)
             {
                 MR->setSpeed(power);
                 ML->setSpeed(power);
@@ -117,6 +128,7 @@ void skipJunc()
                 }
                 delay(2000);
                 spin(RIGHT);
+                lf4s();
             }
         }
         else if (untilJunction == 0)

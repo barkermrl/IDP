@@ -9,45 +9,44 @@ output_status makeDecision()
 {
     // Makes a decision based on the current phase and state variables.
     // Returns an output defined in output_status/
-    switch (phase)
+    if (phase == 1)
     {
-    case 1: // Start phase
+        // Start phase
         if (!atJunction)
         {
             return FOLLOW_LINE;
         }
         else if (atJunction && location == HOME && untilJunction == 0)
         {
-            Serial.println("Phase 1: At 1st junction");
+            //Serial.println("Phase 1: At 1st junction");
             untilJunction++; //setting untillJunc to 1
             ML->setSpeed(power);
             MR->setSpeed(power);
             while (atJunction)
             {
                 getAtJunction();
-                Serial.println("AT JUNC");
+                //Serial.println("AT JUNC");
             }
             return FOLLOW_LINE;
         }
         else if (atJunction && location == HOME && untilJunction == 1)
         {
-            Serial.println("Phase 1: At second junction, moving to tunnel");
+            //Serial.println("Phase 1: At second junction, moving to tunnel");
             untilJunction++; //setting untillJunc to 2
             location = TUNNEL;
 
             ML->setSpeed(power);
             MR->setSpeed(power);
-            delay(1500);
+            delay(2000);
             spin(RIGHT);
-            updateSpeed();
             return FOLLOW_LINE;
         }
         else if (atJunction && untilJunction == 2 && location == TUNNEL)
         {
-            Serial.println("Phase 1: At 3rd junction, entering the loop");
+            //Serial.println("Phase 1: At 3rd junction, entering the loop");
             MR->setSpeed(power);
             ML->setSpeed(power);
-            delay(2000);
+            delay(2500);
             spin(RIGHT);
             direction = ANTICLOCKWISE;
             untilJunction = 2;
@@ -55,8 +54,9 @@ output_status makeDecision()
             start = 0;
             return FOLLOW_LINE;
         } // End start phase
-
-    case 2: // Deliver blue blocks, phase starts when we reach the T junction and turn RIGHT
+    }
+    else if (phase == 2)
+    { // Deliver blue blocks, phase starts when we reach the T junction and turn RIGHT
 
         if (location == LOOP)
         {
@@ -88,10 +88,11 @@ output_status makeDecision()
                     delay(500);
                     if (colour1read() == false) //if its blue
                     {
-                        Serial.println("Phase 2: Identify blue block");
+                        //Serial.println("Phase 2: Identify blue block");
                         currentBlock = BLUE;
                         updateLights(true);
-                        for (int i = 0; i < 1000; i++)
+                        delay(1000);
+                        for (int i = 0; i < 1500; i++)
                         {
                             lf4s();
                         }
@@ -105,18 +106,21 @@ output_status makeDecision()
                             spin(LEFT);
                             direction = CLOCKWISE;
                         }
-                        updateLights(true);
-                        Serial.println("Phase 2: Done spinning (have block)");
+                        //Serial.println("Phase 2: Done spinning (have block)");
                         untilJunction = 2 - untilJunction;
-                        Serial.print("Until junction: ");
-                        Serial.println(untilJunction);
-
+                        //Serial.print("Until junction: ");
                         return FOLLOW_LINE;
+
                     }
                     else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
                     {
-                        Serial.println("Phase 2: Identify red block");
+                        //Serial.println("Phase 2: Identify red block");
+                        currentBlock = RED;
+                        updateLights(false);
+                        delay(1000);
                         openMechanism(); //release the block
+                        currentBlock = EMPTY;
+                        updateLights(true);
                         _R = 1;          //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
@@ -140,10 +144,12 @@ output_status makeDecision()
 
                     else if (colour1read() == true && _R == 1) //if the block is red and you already encountered a red block
                     {
-                        Serial.println("Phase 2: Identify 2nd red block");
+                        //Serial.println("Phase 2: Identify 2nd red block");
                         currentBlock = RED; //pick it up
+                        updateLights(false);
+                        delay(1000);
                         updateLights(true);
-                        for (int i = 0; i < 1000; i++)
+                        for (int i = 0; i < 1500; i++)
                         {
                             lf4s();
                         }
@@ -200,7 +206,6 @@ output_status makeDecision()
                     }
                     else
                     {
-                        untilJunction = 2;
                         for (int i = 0; i <= 3000; i++)
                         {
                             lf4s();
@@ -209,6 +214,8 @@ output_status makeDecision()
                         MR->setSpeed(0);
                         openMechanism();
                         currentBlock = EMPTY;
+                        updateLights(false);
+                        delay(1000);
                         updateLights(true);
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
@@ -226,6 +233,7 @@ output_status makeDecision()
                             direction = CLOCKWISE;
                         }
                         untilJunction = 2;
+                        return FOLLOW_LINE;
                     }
                 }
             }
@@ -237,34 +245,26 @@ output_status makeDecision()
                 }
                 else if (untilJunction == 0) //if you are at the junction
                 {
-                    Serial.println("Phase 2: T-junction (have blue)");
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    while (atJunction)
-                    {
-                        getAtJunction();
-                        for (int i = 0; i < 100; i++)
-                        {
-                            lf4s();
-                        }
-                    }
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(1000);
                     //pass it slightly to make spinning better
                     location = TUNNEL;
                     if (direction == ANTICLOCKWISE) //spin into tunel
                     {
+                        ML ->setSpeed(power+10);
+                        MR ->setSpeed(power-10);
+                        delay(2000);
                         spin(RIGHT);
                         direction = NONE;
-                        Serial.println("Phase 2: Spinning into T-junction (have block)");
+                        //Serial.println("Phase 2: Spinning into T-junction (have block)");
                         return FOLLOW_LINE;
                     }
                     else //spin into tunnel
                     {
+                        MR ->setSpeed(power+10);
+                        ML ->setSpeed(power-10);
+                        delay(2000);
                         spin(LEFT);
                         direction = NONE;
-                        Serial.println("Phase 2: Spinning into T-junction (have block)");
+                        //Serial.println("Phase 2: Spinning into T-junction (have block)");
                         return FOLLOW_LINE;
                     }
                 }
@@ -330,7 +330,7 @@ output_status makeDecision()
         }
         else if (location == BLUE_DELIVERY)
         {
-            if (currentBlock == BLUE)
+            if (currentBlock == BLUE) //entering Blue area with blue Block
             {
                 if (!atJunction)
                 {
@@ -338,14 +338,15 @@ output_status makeDecision()
                 }
                 else if (numB == 0)
                 {
-                    ML->setSpeed(power);
+                    ML->setSpeed(power); //overshoot BLue area T junction
                     MR->setSpeed(power);
                     delay(2000);
-                    spin(LEFT);
-                    ML->setSpeed(power);
+                    spin(LEFT); //Spin left
+                    ML->setSpeed(power); //over shoot first target
                     MR->setSpeed(power);
                     delay(2000);
-                    spin(RIGHT);
+                    spin(RIGHT); //spin right onto straigh to secocnd target
+                    getAtJunction();
                     while (!atJunction)
                     {
                         lf4s();
@@ -353,14 +354,19 @@ output_status makeDecision()
                     }
                     ML->setSpeed(0);
                     MR->setSpeed(0);
-                    openMechanism();
                     currentBlock = EMPTY;
+                    updateLights(false);
+                    openMechanism();
                     numB = 1;
+                    delay(2000);
                     updateLights(true);
                     ML->run(BACKWARD);
                     MR->run(BACKWARD);
+                    ML->setSpeed(power);//to move away from block
+                    MR->setSpeed(power);
+                    delay(1000);
                     ML->setSpeed(150);
-                    MR->setSpeed(0);
+                    MR->setSpeed(70);
                     delay(3000);
                     spin(LEFT);
                 }
@@ -378,21 +384,26 @@ output_status makeDecision()
                     ML->setSpeed(0);
                     MR->setSpeed(0);
                     openMechanism();
-                    currentBlock = EMPTY;
-                    complete2 = true;
                     ML->run(BACKWARD);
                     MR->run(BACKWARD);
+                    currentBlock = EMPTY;
+                    complete2 = true;
+                    updateLights(true);
+                    ML->setSpeed(power);
+                    MR->setSpeed(power);
+                    delay(1000);
                     ML->setSpeed(150);
                     MR->setSpeed(0);
-                    delay(2000);
+                    delay(3000);
                     spin(LEFT);
-                    
                 }
+                getAtJunction();
                 while (!atJunction)
                 {
                     lf4s();
                     getAtJunction();
                 }
+                location = HOME;
                 if (complete2 == true)
                 {
                     ML->setSpeed(power);
@@ -404,16 +415,26 @@ output_status makeDecision()
                     location = HOME;
                     return FOLLOW_LINE;
                 }
-                else
-                {
-                    
-                }
                 else if (numB == 1)
                 {
+                    ML->setSpeed(150);
+                    MR->setSpeed(50);
+                    delay(1500);
+                    spin(RIGHT);
+                    getAtJunction();
+                    while (!atJunction)
+                    {
+                        lf4s();
+                        getAtJunction();
+                    }
                     ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(LEFT);
+                    MR ->setSpeed(power);
+                    delay(3000);
+                    ML->setSpeed(0);
+                    MR->setSpeed(0);
+                    updateLights(false);
+                    return FINISH;
+                    
                 }
 
                 // else if (direction == NONE) //not in the loop yet (T junction)
@@ -499,8 +520,9 @@ output_status makeDecision()
                 }
             }
         }
-
-    case 3: // Deliver red blocks
+    }
+    else if (phase == 3)
+    { // Deliver red blocks
         // location must be loop
         if (numR == 0)
         {
@@ -587,8 +609,9 @@ output_status makeDecision()
             phase = 4;
             return spinToggleJunction();
         }
-
-    case 4: // Return home
+    }
+    else if (phase == 4)
+    { // Return home
         if (location == LOOP)
         {
             if (atJunction)
@@ -665,13 +688,14 @@ output_status makeDecision()
                 return FOLLOW_LINE;
             }
         } // End phase 4
-
-    case 5: // Does something?
+    }
+    else if (phase == 5)
+    { // Does something?
 
         return STOP; // End phase 5
-
-    default: // Lost!
-        Serial.println("PANIC!");
+    }
+    else
+    { // Lost!
         return PANIC;
     }
 }
