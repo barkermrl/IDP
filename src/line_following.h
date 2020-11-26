@@ -1,11 +1,14 @@
 #ifndef LS_H
 #define LS_H
 
-void lf1s();
 void lf4s();
-void followCurve();
 void toggleDir();
 void skipJunc();
+
+// PID controller functions
+void pid();
+void pidUpdateSpeed();
+
 // 4 sensor line following
 extern double kw;
 enum dir_status
@@ -18,8 +21,5 @@ extern dir_status dir;
 
 extern const int kw_min;
 extern int power;
-
-// Single sensor line following
-extern bool change;
 
 #endif
