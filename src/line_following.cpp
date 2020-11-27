@@ -81,6 +81,51 @@ void lf4s()
     // Serial.println(power_difference);
 }
 
+void ReverseLf4s()
+{
+    // Reverse of the line following algorithm
+    // Uses the same code with inverted poweer_difference and motor direction
+
+    // If the left or left middle sensor is on the line, robot is too far to the right.
+    if (LOnLine()) {
+        error = 2;
+    }
+    else if (LMOnLine()) {
+        error = 1;
+    }
+    // If the right or right middle sensor is on the line, robot is too far to the left.
+    else if (RMOnLine())
+    {
+        error = -1;
+    }
+    else if (ROnLine())
+    {
+        error = -2;
+    }
+    // If neither sensors are on the line, robot is directly on the line in the "dead zone".
+    else {
+        error = 0;
+    }
+    // (using the outer two sensors as well would give a greater rang of error for more stability)
+
+    // 2. Calculate derivative of error based on the previous two readings.
+    derivative = error - last_error;
+
+    // 3. Calculate integral of error based on previous integral and current error.
+    // Note this may require resetting to zero at some point to prevent accidental error accumulation.
+    integral = integral + error;
+
+    // 4. Calculate the power_difference correction (power difference is large if robot is too far to the right).
+    // NOTE THE NEGATIVE SIGN
+    power_difference = -int(error*Kp + integral*Ki + derivative*Kd);
+
+    // 5. Update speeds of the motors
+    ReversePidUpdateSpeed();
+
+    // Wait for a bit
+    delay(100);
+}
+
 void pidUpdateSpeed()
 {
     // Function to update the speeds of the motors based on the power_difference calculated in pid loop.
@@ -119,6 +164,49 @@ void pidUpdateSpeed()
     // Else correct the motor as normal
     else {
         MR -> run(FORWARD);
+        MR -> setSpeed(power + power_difference);
+    }
+}
+
+void ReversePidUpdateSpeed()
+{
+    // Function to update the speeds of the motors based on the power_difference calculated in pid loop.
+    // For reversing, motors are set to the opposite direction.
+
+    // Change left motor first
+    // Max out the forward speed to 255
+    if (power - power_difference > 255)
+    {
+        ML -> run(BACKWARD);
+        ML -> setSpeed(255);
+    }
+    // If correction is negative, reverse the motor direction
+    else if (power - power_difference < 0)
+    {
+        ML -> run(FORWARD);
+        ML -> setSpeed(power_difference - power);
+    }
+    // Else correct the motor as normal
+    else {
+        ML -> run(BACKWARD);
+        ML -> setSpeed(power - power_difference);
+    }
+
+    // Now do the same thing for the right motor (opposite signs)
+    if (power + power_difference > 255)
+    {
+        MR -> run(BACKWARD);
+        MR -> setSpeed(255);
+    }
+    // If correction is negative, reverse the motor direction
+    else if (power + power_difference < 0)
+    {
+        MR -> run(FORWARD);
+        MR -> setSpeed(- power_difference - power);
+    }
+    // Else correct the motor as normal
+    else {
+        MR -> run(BACKWARD);
         MR -> setSpeed(power + power_difference);
     }
 }

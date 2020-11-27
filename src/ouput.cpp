@@ -83,25 +83,17 @@ void deliverBlue2()
     ML->setSpeed(power); 
     MR->setSpeed(power);
     delay(2000);
-    // Spin left a bit to correct bearing.
+    // Spin left to correct bearing.
     spin(LEFT);
+    // Spin Left a bit more to line up block
     MR->run(FORWARD);
     ML->run(BACKWARD);
     ML->setSpeed(power);
     MR->setSpeed(power);
-    delay(500);
+    delay(150);
     ML->setSpeed(0);
     MR->setSpeed(0);
-    // Reverse a bit to line up the robot
-    reverse(1000);
-    // Keep going until you hit the junction
-    getAtJunction();
-    while (!atJunction)
-    {
-        lf4s();
-        getAtJunction();
-    }
-    // Stop and drop the block
+    reverse(400);
     ML->setSpeed(0);
     MR->setSpeed(0);
     currentBlock = EMPTY;
@@ -130,8 +122,6 @@ void deliverBlue1()
     delay(2000);
     //spin right onto straight to second target
     spin(RIGHT);
-    // reverse a bit to line up motors
-    reverse(500);
     // Keep going until you hit the junction
     getAtJunction();
     while (!atJunction)

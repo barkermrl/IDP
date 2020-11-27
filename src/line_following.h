@@ -10,6 +10,11 @@ void lf4s_dummy();
 // void pid();
 void pidUpdateSpeed();
 void resetID();
+
+// Add reverse functions in
+void ReverseLf4s();
+void ReversePidUpdateSpeed();
+
 // PID power_difference (used when detecting junctions)
 extern int power_difference;
 

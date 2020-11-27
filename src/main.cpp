@@ -105,7 +105,7 @@ void loop()
             lf4s();
             getAtJunction();
         }
-        deliverBlue2();
+        deliverBlue1();
         while (true){};
     }
     else
