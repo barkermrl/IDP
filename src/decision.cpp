@@ -251,7 +251,7 @@ output_status makeDecision()
                     {
                         ML ->setSpeed(power+10);
                         MR ->setSpeed(power-10);
-                        delay(2000);
+                        delay(1700);
                         spin(RIGHT);
                         direction = NONE;
                         //Serial.println("Phase 2: Spinning into T-junction (have block)");
