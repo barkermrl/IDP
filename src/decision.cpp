@@ -251,7 +251,7 @@ output_status makeDecision()
                     {
                         ML ->setSpeed(power+10);
                         MR ->setSpeed(power-10);
-                        delay(1700);
+                        delay(1500);
                         spin(RIGHT);
                         direction = NONE;
                         //Serial.println("Phase 2: Spinning into T-junction (have block)");
@@ -338,37 +338,7 @@ output_status makeDecision()
                 }
                 else if (numB == 0)
                 {
-                    ML->setSpeed(power); //overshoot BLue area T junction
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(LEFT); //Spin left
-                    ML->setSpeed(power); //over shoot first target
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(RIGHT); //spin right onto straigh to secocnd target
-                    getAtJunction();
-                    while (!atJunction)
-                    {
-                        lf4s();
-                        getAtJunction();
-                    }
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    currentBlock = EMPTY;
-                    updateLights(false);
-                    openMechanism();
-                    numB = 1;
-                    delay(2000);
-                    updateLights(true);
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    ML->setSpeed(power);//to move away from block
-                    MR->setSpeed(power);
-                    delay(1000);
-                    ML->setSpeed(150);
-                    MR->setSpeed(70);
-                    delay(3000);
-                    spin(LEFT);
+                    deliverBlue1();
                 }
                 else if (numB == 1)
                 {
