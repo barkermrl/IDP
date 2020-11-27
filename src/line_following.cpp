@@ -15,7 +15,13 @@ int error; // Error based on line sensor readings
 int last_error; // Variable to store the previous error (for derivative)
 int power_difference; // Term to correct the power
 
-void pid()
+void resetID()
+{
+    integral = 0;
+    last_error = 0;
+}
+
+void lf4s()
 {
     // Function to implement pid control for line following.
     // Largely based on the post here: https://medium.com/@TowardInfinity/pid-for-line-follower-11deb3a1a643
@@ -62,14 +68,17 @@ void pid()
     // 5. Update speeds of the motors
     pidUpdateSpeed();
 
+    // Wait for a bit
+    delay(100);
+
     // Print out for debugging
-    Serial.print(int(error*Kp));
-    Serial.print(' ');
-    Serial.print(int(integral*Ki));
-    Serial.print(' ');
-    Serial.print(int(derivative*Kd));
-    Serial.print(' ');
-    Serial.println(power_difference);
+    // Serial.print(int(error*Kp));
+    // Serial.print(' ');
+    // Serial.print(int(integral*Ki));
+    // Serial.print(' ');
+    // Serial.print(int(derivative*Kd));
+    // Serial.print(' ');
+    // Serial.println(power_difference);
 }
 
 void pidUpdateSpeed()
@@ -114,7 +123,7 @@ void pidUpdateSpeed()
     }
 }
 
-void lf4s()
+void lf4s_dummy()
 {
     // Line is 2cm wide, Targets are 7.5cm wide
     if (dir == R && (LMOnLine() /*or (kw > 150 && location != TUNNEL)*/ or (kw > 100 && location == TUNNEL)))
@@ -199,7 +208,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                delay(2000);
+                delay(1700);
                 spin(LEFT);
                 lf4s();
             }
@@ -235,7 +244,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                delay(2000);
+                delay(1700);
                 spin(RIGHT);
                 lf4s();
             }
@@ -248,7 +257,6 @@ void skipJunc()
             {
                 getAtJunction();
             }
-            lf4s();
             untilJunction = 2;
         }
     }

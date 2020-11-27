@@ -8,7 +8,7 @@ bool on_straight; // true if the robot is going straight
 bool outer_on_line; // true if either of the outer sensors are on the line
 
 //State functions that contains all state variables
-void pidGetAtJunction()
+void getAtJunction()
 {
     // Checks if the robot is going straight (for T-junctions)
     // i.e. the magnitude of power_difference is less than threshold
@@ -36,7 +36,7 @@ void pidGetAtJunction()
     }
 }
 
-void getAtJunction()
+void getAtJunction_dummy()
 {
     if ((ROnLine() && location == LOOP && direction == ANTICLOCKWISE) or (ROnLine() && location != LOOP))
     {

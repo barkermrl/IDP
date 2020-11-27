@@ -4,10 +4,12 @@
 void lf4s();
 void toggleDir();
 void skipJunc();
+void lf4s_dummy();
 
 // PID controller functions
-void pid();
+// void pid();
 void pidUpdateSpeed();
+void resetID();
 // PID power_difference (used when detecting junctions)
 extern int power_difference;
 

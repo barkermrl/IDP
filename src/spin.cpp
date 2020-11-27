@@ -42,6 +42,11 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
             ML->run(FORWARD);
             ML->setSpeed(0);
             MR->setSpeed(0);
+            
+            // dir = L;
+            // for (int i = 0; i<1000; i++){
+            //     lf4s_dummy();
+            // }
             break;
         }
         if (LMOnLine() && spin_direction == RIGHT)
@@ -50,7 +55,12 @@ void spin(spin_direction_status spin_direction) //direction tells you wether or 
             ML->run(FORWARD);
             ML->setSpeed(0);
             MR->setSpeed(0);
+            // dir = R;
+            // for (int i = 0; i<1000; i++){
+            //     lf4s_dummy();
+            // }
             break;
         }
     }
+    resetID();
 }

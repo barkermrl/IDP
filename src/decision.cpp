@@ -18,14 +18,14 @@ output_status makeDecision()
         }
         else if (atJunction && location == HOME && untilJunction == 0)
         {
-            //Serial.println("Phase 1: At 1st junction");
+            Serial.println("Phase 1: At 1st junction");
             untilJunction++; //setting untillJunc to 1
             ML->setSpeed(power);
             MR->setSpeed(power);
             while (atJunction)
             {
                 getAtJunction();
-                //Serial.println("AT JUNC");
+                Serial.println("AT JUNC");
             }
             return FOLLOW_LINE;
         }
@@ -77,7 +77,7 @@ output_status makeDecision()
                 // At block (empty)
                 else
                 {
-                    for (int i = 0; i <= 100; i++)
+                    for (int i = 0; i <= 10; i++)
                     {
                         lf4s();
                     }
@@ -92,7 +92,7 @@ output_status makeDecision()
                         currentBlock = BLUE;
                         updateLights(true);
                         delay(1000);
-                        for (int i = 0; i < 1500; i++)
+                        for (int i = 0; i < 20; i++)
                         {
                             lf4s();
                         }
@@ -149,7 +149,7 @@ output_status makeDecision()
                         updateLights(false);
                         delay(1000);
                         updateLights(true);
-                        for (int i = 0; i < 1500; i++)
+                        for (int i = 0; i < 10; i++)
                         {
                             lf4s();
                         }
@@ -206,7 +206,7 @@ output_status makeDecision()
                     }
                     else
                     {
-                        for (int i = 0; i <= 3000; i++)
+                        for (int i = 0; i <= 30; i++)
                         {
                             lf4s();
                         }

@@ -56,12 +56,11 @@ void loop()
     // Get state variables for this timestep
     getPhase();
     getAtblock();
-    pidGetAtJunction();
-    //getAtJunction();
+    getAtJunction();
     // Get output from the decision making process
-    //output = makeDecision();
+    output = makeDecision();
     // Switch case to call the correct output
-    output = TEST;
+    // output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s();
@@ -107,8 +106,8 @@ void loop()
             MR->setSpeed(power);
             delay(500);
         }
-        pid();
-        delay(100);
+        lf4s();
+        
     }
     else
     {
