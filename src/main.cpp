@@ -98,14 +98,8 @@ void loop()
     }
     else if (output == TEST)
     {
-        ML->run(FORWARD);
-        MR->run(FORWARD);
-        MR->setSpeed(50);
-        ML->setSpeed(150);
-        delay(3000);
-        MR->setSpeed(0);
-        ML->setSpeed(0);
-        delay(10000);
+        pid();
+        delay(100);
     }
     else
     {

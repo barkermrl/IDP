@@ -6,9 +6,9 @@
 #define turnThresh 200
 
 // Control variables for pid loop
-float Kp; // For proportional control
-float Ki; // For integral control
-float Kd; // For derivative control
+float Kp = 10; // For proportional control
+float Ki = 10; // For integral control
+float Kd = 5; // For derivative control
 int derivative; // Derivative component of the correction
 int integral; // Integral component of the correction
 int error; // Error based on line sensor readings
@@ -27,14 +27,21 @@ void pid()
     // Note error is positive when the robot is to the right of the line,
     // and negative when the robot is to the left of the line.
 
-    // If the left sensor is on the line, robot is too far to the right.
-    if (LMOnLine()) {
+    // If the left or left middle sensor is on the line, robot is too far to the right.
+    if (LOnLine()) {
+        error = 2;
+    }
+    else if (LMOnLine()) {
         error = 1;
     }
-    // If the right sensor is on the line, robot is too far to the left.
+    // If the right or right middle sensor is on the line, robot is too far to the left.
     else if (RMOnLine())
     {
         error = -1;
+    }
+    else if (ROnLine())
+    {
+        error = -2;
     }
     // If neither sensors are on the line, robot is directly on the line in the "dead zone".
     else {
@@ -54,6 +61,15 @@ void pid()
 
     // 5. Update speeds of the motors
     pidUpdateSpeed();
+
+    // Print out for debugging
+    Serial.print(int(error*Kp));
+    Serial.print(' ');
+    Serial.print(int(integral*Ki));
+    Serial.print(' ');
+    Serial.print(int(derivative*Kd));
+    Serial.print(' ');
+    Serial.println(power_difference);
 }
 
 void pidUpdateSpeed()
