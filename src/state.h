@@ -42,6 +42,7 @@ enum location_status
 };
 extern location_status location;
 
+void pidGetAtJunction(); // New junction detection with pid
 void getAtJunction();
 void getUntilJunc();
 #endif

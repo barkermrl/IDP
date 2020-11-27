@@ -19,7 +19,7 @@ int numB = 0; //number of blue targets delivered
 int numR = 0; //number of red targets delivered
 
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction (SET TO 0 FOR START UP)
-bool atJunction = false; //currently not at a junction
+bool atJunction = false; //currently at a junction
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int _R = 0;              //(phase 2) 0 means spin when you see a red block and 1 means move it
@@ -56,8 +56,8 @@ void loop()
     // Get state variables for this timestep
     getPhase();
     getAtblock();
-    //getBlockAhead();
-    getAtJunction();
+    pidGetAtJunction();
+    //getAtJunction();
     // Get output from the decision making process
     //output = makeDecision();
     // Switch case to call the correct output
@@ -98,6 +98,15 @@ void loop()
     }
     else if (output == TEST)
     {
+        if (atJunction)
+        {
+            ML->setSpeed(0);
+            MR->setSpeed(0);
+            delay(500);
+            ML->setSpeed(power);
+            MR->setSpeed(power);
+            delay(500);
+        }
         pid();
         delay(100);
     }

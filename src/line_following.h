@@ -8,6 +8,8 @@ void skipJunc();
 // PID controller functions
 void pid();
 void pidUpdateSpeed();
+// PID power_difference (used when detecting junctions)
+extern int power_difference;
 
 // 4 sensor line following
 extern double kw;
