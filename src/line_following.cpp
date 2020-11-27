@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "electronics.h"
-#include "spin.h"
+#include "output.h"
 #include "line_following.h"
 #include "state.h"
 #define turnThresh 200

@@ -6,3 +6,5 @@ enum spin_direction_status
 };
 
 void spin(spin_direction_status spin_direction);
+void deliverBlue1();
+void deliverBlue2();

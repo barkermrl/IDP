@@ -3,7 +3,7 @@
 #include "state.h"
 #include <Arduino.h>
 #include "line_following.h"
-#include "spin.h"
+#include "output.h"
 
 output_status makeDecision()
 {

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "line_following.h" // line following algorithms
-#include "spin.h"           // algorithms to spin 90 and 180
+#include "output.h"           // algorithms to spin 90 and 180
 #include "state.h"          // algorithms to get state variables
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
@@ -48,7 +48,7 @@ void setup()
     wait();
     Serial.println("stop waiting");
     // Set speed of motors to initial value
-    updateSpeed();
+    // updateSpeed();
 }
 
 void loop()
@@ -58,9 +58,9 @@ void loop()
     getAtblock();
     getAtJunction();
     // Get output from the decision making process
-    output = makeDecision();
+    // output = makeDecision();
     // Switch case to call the correct output
-    // output = TEST;
+    output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s();
@@ -97,17 +97,16 @@ void loop()
     }
     else if (output == TEST)
     {
-        if (atJunction)
+        ML->setSpeed(0);
+        MR->setSpeed(0);
+        closeMechanism();
+        while (!atJunction)
         {
-            ML->setSpeed(0);
-            MR->setSpeed(0);
-            delay(500);
-            ML->setSpeed(power);
-            MR->setSpeed(power);
-            delay(500);
+            lf4s();
+            getAtJunction();
         }
-        lf4s();
-        
+        deliverBlue2();
+        while (true){};
     }
     else
     {
