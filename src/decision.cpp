@@ -3,7 +3,7 @@
 #include "state.h"
 #include <Arduino.h>
 #include "line_following.h"
-#include "spin.h"
+#include "output.h"
 
 output_status makeDecision()
 {
@@ -18,14 +18,14 @@ output_status makeDecision()
         }
         else if (atJunction && location == HOME && untilJunction == 0)
         {
-            //Serial.println("Phase 1: At 1st junction");
+            Serial.println("Phase 1: At 1st junction");
             untilJunction++; //setting untillJunc to 1
             ML->setSpeed(power);
             MR->setSpeed(power);
             while (atJunction)
             {
                 getAtJunction();
-                //Serial.println("AT JUNC");
+                Serial.println("AT JUNC");
             }
             return FOLLOW_LINE;
         }
@@ -77,7 +77,7 @@ output_status makeDecision()
                 // At block (empty)
                 else
                 {
-                    for (int i = 0; i <= 100; i++)
+                    for (int i = 0; i <= 10; i++)
                     {
                         lf4s();
                     }
@@ -92,7 +92,7 @@ output_status makeDecision()
                         currentBlock = BLUE;
                         updateLights(true);
                         delay(1000);
-                        for (int i = 0; i < 1500; i++)
+                        for (int i = 0; i < 20; i++)
                         {
                             lf4s();
                         }
@@ -149,7 +149,7 @@ output_status makeDecision()
                         updateLights(false);
                         delay(1000);
                         updateLights(true);
-                        for (int i = 0; i < 1500; i++)
+                        for (int i = 0; i < 10; i++)
                         {
                             lf4s();
                         }
@@ -206,7 +206,7 @@ output_status makeDecision()
                     }
                     else
                     {
-                        for (int i = 0; i <= 3000; i++)
+                        for (int i = 0; i <= 30; i++)
                         {
                             lf4s();
                         }
@@ -251,7 +251,7 @@ output_status makeDecision()
                     {
                         ML ->setSpeed(power+10);
                         MR ->setSpeed(power-10);
-                        delay(2000);
+                        delay(1500);
                         spin(RIGHT);
                         direction = NONE;
                         //Serial.println("Phase 2: Spinning into T-junction (have block)");
@@ -338,37 +338,7 @@ output_status makeDecision()
                 }
                 else if (numB == 0)
                 {
-                    ML->setSpeed(power); //overshoot BLue area T junction
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(LEFT); //Spin left
-                    ML->setSpeed(power); //over shoot first target
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(RIGHT); //spin right onto straigh to secocnd target
-                    getAtJunction();
-                    while (!atJunction)
-                    {
-                        lf4s();
-                        getAtJunction();
-                    }
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    currentBlock = EMPTY;
-                    updateLights(false);
-                    openMechanism();
-                    numB = 1;
-                    delay(2000);
-                    updateLights(true);
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    ML->setSpeed(power);//to move away from block
-                    MR->setSpeed(power);
-                    delay(1000);
-                    ML->setSpeed(150);
-                    MR->setSpeed(70);
-                    delay(3000);
-                    spin(LEFT);
+                    deliverBlue1();
                 }
                 else if (numB == 1)
                 {

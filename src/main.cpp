@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "line_following.h" // line following algorithms
-#include "spin.h"           // algorithms to spin 90 and 180
+#include "output.h"           // algorithms to spin 90 and 180
 #include "state.h"          // algorithms to get state variables
 #include "electronics.h"    // contains electronics interface
 #include "decision.h"       // decides what to do at each timestep
@@ -19,7 +19,7 @@ int numB = 0; //number of blue targets delivered
 int numR = 0; //number of red targets delivered
 
 int untilJunction = 0;   //number of "junction detections" until we actually hit a junction (SET TO 0 FOR START UP)
-bool atJunction = false; //currently not at a junction
+bool atJunction = false; //currently at a junction
 int start = 1;           //a variable that calls for the start/end sequence
 int phase = 0;           //the phase we are currently in
 int _R = 0;              //(phase 2) 0 means spin when you see a red block and 1 means move it
@@ -48,7 +48,7 @@ void setup()
     wait();
     Serial.println("stop waiting");
     // Set speed of motors to initial value
-    updateSpeed();
+    // updateSpeed();
 }
 
 void loop()
@@ -56,12 +56,11 @@ void loop()
     // Get state variables for this timestep
     getPhase();
     getAtblock();
-    //getBlockAhead();
     getAtJunction();
     // Get output from the decision making process
-    //output = makeDecision();
+    output = makeDecision();
     // Switch case to call the correct output
-    output = TEST;
+    // output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s();
@@ -98,14 +97,16 @@ void loop()
     }
     else if (output == TEST)
     {
-        ML->run(FORWARD);
-        MR->run(FORWARD);
-        MR->setSpeed(50);
-        ML->setSpeed(150);
-        delay(3000);
-        MR->setSpeed(0);
         ML->setSpeed(0);
-        delay(10000);
+        MR->setSpeed(0);
+        closeMechanism();
+        while (!atJunction)
+        {
+            lf4s();
+            getAtJunction();
+        }
+        deliverBlue1();
+        while (true){};
     }
     else
     {
