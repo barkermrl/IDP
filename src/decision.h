@@ -22,6 +22,7 @@ void moveUntilBlock();
 void moveUntilJunction();
 void releaseBlock();
 void followLineForwards(int iterations);
+void turnIntoTunnel();
 void getPhase();
 void toggleDirection();
 #endif

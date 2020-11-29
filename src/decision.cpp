@@ -586,83 +586,28 @@ output_status makeDecision()
     }
     else if (phase == 4)
     { // Return home
-        if (location == LOOP)
-        {
-            if (atJunction)
-            {
-                Serial.println("AT JUNC");
-                if (direction == ANTICLOCKWISE)
-                {
-                    location = TUNNEL;
-                    MR->setSpeed(power);
-                    ML->setSpeed(power);
-                    Serial.println("start Delay ANTI");
-                    delay(2000);
-                    Serial.println("done delay ANTI");
-                    return SPIN_R;
-                }
-                else if (direction == CLOCKWISE)
-                {
-                    location = TUNNEL;
-                    MR->setSpeed(power);
-                    ML->setSpeed(power);
-                    Serial.println("stat Delay");
-                    delay(2000);
-                    Serial.println("done delay");
-                    if (RMOnLine() or LMOnLine())
-                    {
-                        return SPIN_L;
-                    }
-                }
-            }
-            else if (untilJunction == 2)
-            {
-                Serial.println("SPin");
+        // Get to T junction and turn into tunnel
+        moveUntilJunction();
+        skipJunc();
+        turnIntoTunnel();
+        location = TUNNEL;
 
-                if (LMOnLine() or RMOnLine())
-                {
-                    return returnSpinToggleJunction();
-                }
-                return FOLLOW_LINE;
-            }
-            else if (untilJunction == 0)
-            {
-                return FOLLOW_LINE;
-            }
-        }
-        else if (location == TUNNEL)
-        {
-            if (atJunction)
-            {
-                location = HOME;
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(1000);
-                getAtJunction();
-                if (atJunction)
-                {
-                    return SPIN_L;
-                }
-            }
-            return FOLLOW_LINE;
-        }
-        else if (location == HOME)
-        {
-            if (atJunction)
-            {
-                // Back at home square
-                // Wait have a second to get into square
-                MR->setSpeed(power);
-                ML->setSpeed(power);
-                delay(5000);
-                return FINISH;
-            }
-            else
-            {
-                return FOLLOW_LINE;
-            }
-        } // End phase 4
-    }
+        // Move through the tunnel
+        moveUntilJunction();
+        // Overshoot and turn left
+        ML->setSpeed(power);
+        MR->setSpeed(power);
+        delay(2000);
+        spin(LEFT);
+        location = HOME;
+
+        // Move to the home square and stop
+        moveUntilJunction();
+        MR->setSpeed(power);
+        ML->setSpeed(power);
+        delay(5000);
+        return FINISH;
+    } // End phase 4
     else if (phase == 5)
     { // Does something?
 
@@ -763,6 +708,7 @@ void releaseBlock()
     MR->run(BACKWARD);
     ML->setSpeed(power);
     MR->setSpeed(power);
+    delay(1000);
 }
 
 void moveUntilBlock()
@@ -788,5 +734,20 @@ void followLineForwards(int iterations)
     for (int i = 0; i < iterations; i++)
     {
         lf4s();
+    }
+}
+
+void turnIntoTunnel()
+{
+    // Overshoot the tunnel
+    followLineForwards(10);
+    // Turn into tunnel
+    if (direction == CLOCKWISE)
+    {
+        spin(LEFT);
+    }
+    else
+    {
+        spin(RIGHT);
     }
 }
