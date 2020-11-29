@@ -15,7 +15,13 @@ enum output_status
 };
 
 output_status makeDecision();
-output_status spinToggleJunction();
+output_status returnSpinToggleJunction();
+void spinToggleJunction();
+void grabBlock(bool moving);
+void moveUntilBlock();
+void moveUntilJunction();
+void releaseBlock();
+void followLineForwards(int iterations);
 void getPhase();
 void toggleDirection();
 #endif

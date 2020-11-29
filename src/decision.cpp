@@ -110,7 +110,6 @@ output_status makeDecision()
                         untilJunction = 2 - untilJunction;
                         //Serial.print("Until junction: ");
                         return FOLLOW_LINE;
-
                     }
                     else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
                     {
@@ -121,7 +120,7 @@ output_status makeDecision()
                         openMechanism(); //release the block
                         currentBlock = EMPTY;
                         updateLights(true);
-                        _R = 1;          //to pick up and move the next red block we hit
+                        _R = 1; //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
                         ML->setSpeed(power);
@@ -249,8 +248,8 @@ output_status makeDecision()
                     location = TUNNEL;
                     if (direction == ANTICLOCKWISE) //spin into tunel
                     {
-                        ML ->setSpeed(power+10);
-                        MR ->setSpeed(power-10);
+                        ML->setSpeed(power + 10);
+                        MR->setSpeed(power - 10);
                         delay(1500);
                         spin(RIGHT);
                         direction = NONE;
@@ -259,8 +258,8 @@ output_status makeDecision()
                     }
                     else //spin into tunnel
                     {
-                        MR ->setSpeed(power+10);
-                        ML ->setSpeed(power-10);
+                        MR->setSpeed(power + 10);
+                        ML->setSpeed(power - 10);
                         delay(2000);
                         spin(LEFT);
                         direction = NONE;
@@ -398,15 +397,13 @@ output_status makeDecision()
                         getAtJunction();
                     }
                     ML->setSpeed(power);
-                    MR ->setSpeed(power);
+                    MR->setSpeed(power);
                     delay(3000);
                     ML->setSpeed(0);
                     MR->setSpeed(0);
                     updateLights(false);
                     return FINISH;
-                    
                 }
-
                 // else if (direction == NONE) //not in the loop yet (T junction)
                 // {
                 //     ML->run(FORWARD);
@@ -492,92 +489,99 @@ output_status makeDecision()
         }
     }
     else if (phase == 3)
-    { // Deliver red blocks
-        // location must be loop
-        if (numR == 0)
+    {
+        // Deliver red blocks (location must be loop)
+        if (redPosition == BOTH_RIGHT_BEFORE_DELIVERY)
         {
-            // If we're at a junction, update count.
-            if (atJunction)
-            {
-                getUntilJunc();
-            }
-            // If there is a block ahead...
-            if (blockAhead)
-            {
-                // ... and we don't one, pick it up.
-                if (currentBlock == EMPTY)
-                {
-                    currentBlock = RED;
-                    return GRAB_BLOCK;
-                }
-                // ... and we do have one, spin around.
-                else if (currentBlock == RED)
-                {
-                    return spinToggleJunction();
-                }
-            }
-            // If we don't have a block, continue line following.
-            else
-            {
-                return FOLLOW_LINE;
-            }
+            // Move to get the first block and bring it to delivery target
+            moveUntilBlock();
+            grabBlock(true);
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // skip T junction
+            moveUntilJunction();
+            releaseBlock();
+            numR = 1;
+
+            // Move back to get the other block
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc();
+            moveUntilBlock();
+
+            // Get the block and bring it to the other delivery target
+            grabBlock(true);
+            moveUntilJunction();
+            releaseBlock();
+            numR = 2;
+
+            // Spin and move to phase 4
+            return returnSpinToggleJunction();
         }
-        else if (numR == 1)
+        else if (redPosition == BOTH_RIGHT)
         {
-            // If we have a block...
-            if (currentBlock == RED)
-            {
-                // ...and there's a block ahead, spin around.
-                if (blockAhead)
-                {
-                    return spinToggleJunction();
-                }
-                // ... and we're at a delivery target, release block.
-                else if (atJunction && untilJunction != 0)
-                {
-                    // Update number of blocks delivered
-                    numR = 2;
-                    return RELEASE_BLOCK;
-                }
-                // ... and we're at the tunnel junction, keep going.
-                else if (atJunction && untilJunction == 0)
-                {
-                    // Update untilJunction
-                    getUntilJunc();
-                    return FOLLOW_LINE;
-                }
-                // ...and nothing is ahead, keep going.
-                else
-                {
-                    return FOLLOW_LINE;
-                }
-            }
-            // If we don't have a block...
-            else
-            {
-                // ... and there's a block ahead, pick it up.
-                if (blockAhead)
-                {
-                    return GRAB_BLOCK;
-                }
-                // ... and there's a junction, update and continue.
-                else if (atJunction)
-                {
-                    getUntilJunc();
-                    return FOLLOW_LINE;
-                }
-                // ... and there's nothing, continue.
-                else
-                {
-                    return FOLLOW_LINE;
-                }
-            }
+            // Place nearest red block on nearest red delivery
+            moveUntilBlock();
+            grabBlock(true);
+            moveUntilJunction();
+            releaseBlock();
+            numR = 1;
+
+            // Spin and move to other red block
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // first T junction
+            moveUntilJunction();
+            skipJunc(); // second red delivery
+            moveUntilBlock();
+
+            // Grab block and deliver it
+            grabBlock(true);
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // skip delivery target
+            followLineForwards(30);
+            spinToggleJunction(); // spin around to orientate with target
+            moveUntilJunction();
+            releaseBlock();
+            numR = 2;
+
+            // Move to phase 4
+            return returnSpinToggleJunction();
         }
-        else if (numR == 2)
+        else if (redPosition == BOTH_LEFT)
         {
-            // Set phase to 4 and spin around.
-            phase = 4;
-            return spinToggleJunction();
+            // Spin and move to the other side of the junction
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // skip T junction
+
+            // Get first red block and deliver it
+            moveUntilBlock();
+            grabBlock(true);
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // T junction
+            moveUntilJunction();
+            releaseBlock();
+            numR = 1;
+
+            // Get second block and deliver it
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // T junction
+            moveUntilBlock();
+            grabBlock(true);
+            moveUntilJunction();
+            releaseBlock();
+            numR = 2;
+
+            // Move to phase 4
+            return returnSpinToggleJunction();
+        }
+        else
+        {
+            return PANIC;
         }
     }
     else if (phase == 4)
@@ -617,7 +621,7 @@ output_status makeDecision()
 
                 if (LMOnLine() or RMOnLine())
                 {
-                    return spinToggleJunction();
+                    return returnSpinToggleJunction();
                 }
                 return FOLLOW_LINE;
             }
@@ -707,7 +711,7 @@ void getPhase()
     }
 }
 
-output_status spinToggleJunction()
+output_status returnSpinToggleJunction()
 {
     // Utility function when spinning in the loop
     // Toggle direction
@@ -720,4 +724,69 @@ output_status spinToggleJunction()
         return SPIN_R;
     }
     return SPIN_L;
+}
+
+void spinToggleJunction()
+{
+    // Utility function when spinning in the loop
+    // Toggle direction
+    toggleDirection();
+    // Update number until junction
+    getUntilJunc();
+    // spin the correct way
+    if (direction == ANTICLOCKWISE)
+    {
+        spin(RIGHT);
+    }
+    else
+    {
+        spin(LEFT);
+    }
+}
+
+void grabBlock(bool moving)
+{
+    ML->setSpeed(0);
+    MR->setSpeed(0);
+    updateLights(moving);
+    closeMechanism();
+}
+
+void releaseBlock()
+{
+    ML->setSpeed(0);
+    MR->setSpeed(0);
+    openMechanism();
+    currentBlock = EMPTY;
+    updateLights(true);
+    ML->run(BACKWARD);
+    MR->run(BACKWARD);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+}
+
+void moveUntilBlock()
+{
+    while (!atBlock)
+    {
+        lf4s();
+        getAtblock();
+    }
+}
+
+void moveUntilJunction()
+{
+    while (!atJunction)
+    {
+        lf4s();
+        getAtJunction();
+    }
+}
+
+void followLineForwards(int iterations)
+{
+    for (int i = 0; i < iterations; i++)
+    {
+        lf4s();
+    }
 }

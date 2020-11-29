@@ -27,11 +27,11 @@ bool atBlock = false;    // 0 for no block detected, 1 for block detected by pro
 bool blockAhead = false; // Block detected by IR
 bool complete2 = false;  // Completed second phase
 
-
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY FOR START UP)
 location_status location = HOME;          //Which section of the track we're in (SET TO HOME FOR START UP)
 direction_status direction = NONE;   //-1 for AC 1 for C. (SET TO NONE FOR START UP)
 output_status output;                     //Determines what the robot does at each timestep
+redPosition_status redPosition = UNKNOWN;  // Position of red blocks to start
 
 void setup()
 {
@@ -46,7 +46,7 @@ void setup()
     electronics_setup();
     // Wait until button is pressed
     wait();
-    Serial.println("stop waiting");
+    Serial.println("Stop waiting");
     // Set speed of motors to initial value
     // updateSpeed();
 }
@@ -70,7 +70,6 @@ void loop()
     {
         spin(LEFT);
         lf4s();
-        Serial.println("Done Spin");
     }
     else if (output == SPIN_R)
     {
