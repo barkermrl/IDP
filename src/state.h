@@ -14,6 +14,15 @@ extern bool atBlock;      //If there is a block in our open arms
 extern bool blockAhead;   //If there is a block in front of our arms
 extern bool complete2;    //To aid in phase swap between 2 and 3
 
+enum redPosition_status
+{
+    BOTH_RIGHT_BEFORE_DELIVERY,
+    BOTH_RIGHT,
+    BOTH_LEFT,
+    UNKNOWN,
+};
+extern redPosition_status redPosition;
+
 // Current block in grabber
 enum currentBlock_status
 {
