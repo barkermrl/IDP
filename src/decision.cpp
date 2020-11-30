@@ -81,10 +81,7 @@ output_status makeDecision()
                     {
                         lf4s();
                     }
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    updateLights(false);
-                    closeMechanism(); //Pick up block
+                    grabBlock(false);//Pick up block
                     delay(500);
                     if (colour1read() == false) //if its blue
                     {
@@ -213,6 +210,7 @@ output_status makeDecision()
                         MR->setSpeed(0);
                         openMechanism();
                         currentBlock = EMPTY;
+                        redPosition = BOTH_RIGHT_BEFORE_DELIVERY;
                         updateLights(false);
                         delay(1000);
                         updateLights(true);
@@ -246,26 +244,8 @@ output_status makeDecision()
                 {
                     //pass it slightly to make spinning better
                     location = TUNNEL;
-                    if (direction == ANTICLOCKWISE) //spin into tunel
-                    {
-                        ML->setSpeed(power + 10);
-                        MR->setSpeed(power - 10);
-                        delay(1500);
-                        spin(RIGHT);
-                        direction = NONE;
-                        //Serial.println("Phase 2: Spinning into T-junction (have block)");
-                        return FOLLOW_LINE;
-                    }
-                    else //spin into tunnel
-                    {
-                        MR->setSpeed(power + 10);
-                        ML->setSpeed(power - 10);
-                        delay(2000);
-                        spin(LEFT);
-                        direction = NONE;
-                        //Serial.println("Phase 2: Spinning into T-junction (have block)");
-                        return FOLLOW_LINE;
-                    }
+                    turnIntoTunnel();
+                    return FOLLOW_LINE;
                 }
                 else if (untilJunction != 0) //if you drive over a red target, skip it
                 {
@@ -341,150 +321,35 @@ output_status makeDecision()
                 }
                 else if (numB == 1)
                 {
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(LEFT);
-                    while (!atJunction)
-                    {
-                        lf4s();
-                        getAtJunction();
-                    }
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    openMechanism();
-                    ML->run(BACKWARD);
-                    MR->run(BACKWARD);
-                    currentBlock = EMPTY;
-                    complete2 = true;
-                    updateLights(true);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(1000);
-                    ML->setSpeed(150);
-                    MR->setSpeed(0);
-                    delay(3000);
-                    spin(LEFT);
+                    deliverBlue2();
+                    numB = 2;
                 }
-                getAtJunction();
-                while (!atJunction)
+                moveUntilJunction();
+                ML->setSpeed(power);
+                MR->setSpeed(power);
+                delay(2000);
+                spin(LEFT);
+                moveUntilJunction();
+                ML->setSpeed(power);
+                MR->setSpeed(power);
+                delay(2000);
+                if (redPosition == BOTH_RIGHT_BEFORE_DELIVERY)
                 {
-                    lf4s();
-                    getAtJunction();
+                    spin(LEFT);
+                    direction = CLOCKWISE;
                 }
-                location = HOME;
+                else
+                {
+                    spin(RIGHT);
+                    direction = ANTICLOCKWISE;
+                }
                 if (complete2 == true)
                 {
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(RIGHT);
                     numB = 2;
-                    numR = 2;
-                    location = HOME;
-                    return FOLLOW_LINE;
                 }
-                else if (numB == 1)
-                {
-                    ML->setSpeed(150);
-                    MR->setSpeed(50);
-                    delay(1500);
-                    spin(RIGHT);
-                    getAtJunction();
-                    while (!atJunction)
-                    {
-                        lf4s();
-                        getAtJunction();
-                    }
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(3000);
-                    ML->setSpeed(0);
-                    MR->setSpeed(0);
-                    updateLights(false);
-                    return FINISH;
-                }
-                // else if (direction == NONE) //not in the loop yet (T junction)
-                // {
-                //     ML->run(FORWARD);
-                //     MR->run(FORWARD);
-                //     ML->setSpeed(power);
-                //     MR->setSpeed(power);
-                //     delay(2000); //go a little forward to imporve spin
-                //     spin(LEFT);  //always spin left
-                //     direction = CLOCKWISE;
-                //     untilJunction = untilJunction - 1; //reduce untill junction by 1
-                //     return FOLLOW_LINE;
-                // }
-                // else if (untilJunction == 1) //if we hit the first "junction" (target) and it is not the target
-                // {
-                //     ML->run(FORWARD);
-                //     MR->run(FORWARD);
-                //     ML->setSpeed(power);
-                //     MR->setSpeed(power);
-                //     delay(2000); //skip it and
-                //     spin(RIGHT); //spin right
-                //     untilJunction = untilJunction - 1;
-                //     return FOLLOW_LINE;
-                // }
-                // else if (untilJunction == 0) //if we hit the target junction, drop target
-                // {
-                //     ML->setSpeed(0);
-                //     MR->setSpeed(0);
-                //     updateLights(false);
-                //     openMechanism(); //release block and update state variables
-                //     currentBlock = EMPTY;
-                //     if (numB == 0)
-                //     {
-                //         numB = numB + 1;
-                //     }
-                //     else if (numB == 1)
-                //     {
-                //         complete2 = true;
-                //     }
-                //     ML->run(BACKWARD);
-                //     MR->run(BACKWARD);
-                //     updateLights(true);
-                //     ML->setSpeed(power);
-                //     MR->setSpeed(power);
-                //     delay(2000);
-                //     spin(RIGHT); //spin directly onto area before junction
-                //     if (complete2 != true)
-                //     {
-                //         ML->run(BACKWARD);
-                //         MR->run(BACKWARD);
-                //         updateLights(true);
-                //         ML->setSpeed(power);
-                //         MR->setSpeed(power);
-                //         delay(1500);
-                //     }
-                //     direction = NONE;
-                //     untilJunction = 1;
-                //     return FOLLOW_LINE;
-                // }
-            }
-            else
-            {
-                if (!atJunction)
-                {
-                    return FOLLOW_LINE;
-                }
-                else if (untilJunction == 1)
-                {
-                    ML->run(FORWARD);
-                    MR->run(FORWARD);
-                    ML->setSpeed(power);
-                    MR->setSpeed(power);
-                    delay(2000);
-                    spin(RIGHT);
-                    untilJunction = 0;
-                    return FOLLOW_LINE;
-                }
-                else if (untilJunction == 0)
-                {
-                    location = TUNNEL;
-                    return FOLLOW_LINE;
-                }
+                _R = 0;
+                location = LOOP;
+                return FOLLOW_LINE;
             }
         }
     }
@@ -745,10 +610,21 @@ void turnIntoTunnel()
     // Turn into tunnel
     if (direction == CLOCKWISE)
     {
+        ML-> run(BACKWARD);
+        ML ->setSpeed(power);
+        MR -> run(FORWARD);
+        MR -> setSpeed(power);
+        delay(1000);
         spin(LEFT);
     }
     else
     {
+        ML-> run(FORWARD);
+        ML ->setSpeed(power);
+        MR -> run(BACKWARD);
+        MR -> setSpeed(power);
+        delay(1000);
         spin(RIGHT);
     }
+    location = TUNNEL;
 }
