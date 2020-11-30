@@ -497,8 +497,7 @@ output_status makeDecision()
             moveUntilBlock();
             grabBlock(true);
             spinToggleJunction();
-            moveUntilJunction();
-            skipJunc(); // skip T junction
+            getUntilJunc(); // update untilJunc after passing T
             moveUntilJunction();
             releaseBlock();
             numR = 1;
@@ -646,7 +645,7 @@ void getPhase()
     {
         phase = 3; //third phase (delivering the red blocks to their targets)
     }
-    else if (start == 1 && numB == 2 && numR == 2)
+    else if (start == 0 && numB == 2 && numR == 2)
     {
         phase = 4; //4th phase (return to start area)
     }
@@ -713,6 +712,7 @@ void releaseBlock()
 
 void moveUntilBlock()
 {
+    getAtblock();
     while (!atBlock)
     {
         lf4s();
@@ -722,6 +722,7 @@ void moveUntilBlock()
 
 void moveUntilJunction()
 {
+    getAtJunction();
     while (!atJunction)
     {
         lf4s();
