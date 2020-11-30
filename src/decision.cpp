@@ -333,7 +333,7 @@ output_status makeDecision()
                 ML->setSpeed(power);
                 MR->setSpeed(power);
                 delay(2000);
-                if (redPosition == BOTH_RIGHT_BEFORE_DELIVERY)
+                if (redPosition == BOTH_RIGHT_BEFORE_DELIVERY && numB < 2)
                 {
                     spin(LEFT);
                     direction = CLOCKWISE;
