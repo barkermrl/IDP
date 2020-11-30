@@ -445,6 +445,39 @@ output_status makeDecision()
             // Move to phase 4
             return returnSpinToggleJunction();
         }
+        else if (redPosition == BOTH_TOP)
+        {
+            // Move to first block and grab it
+            moveUntilJunction();
+            skipJunc(); // skip target
+            moveUntilBlock();
+            grabBlock(true);
+
+            // Position it on target
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // skip delivery target to get to the correct side
+            followLineForwards(30); // overshoot target
+            spinToggleJunction();
+            moveUntilJunction(); // move to target
+            releaseBlock();
+            numR = 1;
+
+            // Move to other block and grab it
+            spinToggleJunction();
+            moveUntilJunction();
+            skipJunc(); // skip T junction
+            moveUntilBlock();
+            grabBlock(true);
+            
+            // Position it on target
+            moveUntilJunction();
+            releaseBlock();
+            numR = 2;
+
+            // Move to phase 4
+            return returnSpinToggleJunction();
+        }
         else
         {
             return PANIC;
