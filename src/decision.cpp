@@ -112,6 +112,7 @@ output_status makeDecision()
                     {
                         //Serial.println("Phase 2: Identify red block");
                         currentBlock = RED;
+                        hitRED = true;
                         updateLights(false);
                         delay(1000);
                         openMechanism(); //release the block
@@ -144,6 +145,7 @@ output_status makeDecision()
                         currentBlock = RED; //pick it up
                         updateLights(false);
                         delay(1000);
+                        movedRED = true;
                         updateLights(true);
                         for (int i = 0; i < 10; i++)
                         {
