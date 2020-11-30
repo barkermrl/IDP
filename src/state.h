@@ -14,11 +14,15 @@ extern bool atBlock;      //If there is a block in our open arms
 extern bool blockAhead;   //If there is a block in front of our arms
 extern bool complete2;    //To aid in phase swap between 2 and 3
 
+extern bool hitRED;
+extern bool movedRED;
+
 enum redPosition_status
 {
-    BOTH_RIGHT_BEFORE_DELIVERY,
-    BOTH_RIGHT,
-    BOTH_LEFT,
+    BOTH_RIGHT_BEFORE_DELIVERY, // 1
+    BOTH_LEFT, // 2
+    BOTH_RIGHT, // 3
+    BOTH_TOP, // 4
     UNKNOWN,
 };
 extern redPosition_status redPosition;
