@@ -596,7 +596,7 @@ output_status makeDecision()
         // Overshoot and turn left
         ML->setSpeed(power);
         MR->setSpeed(power);
-        delay(2000);
+        delay(5000);
         spin(LEFT);
         location = HOME;
 
@@ -604,7 +604,7 @@ output_status makeDecision()
         moveUntilJunction();
         MR->setSpeed(power);
         ML->setSpeed(power);
-        delay(5000);
+        delay(3500);
         return FINISH;
     } // End phase 4
     else if (phase == 5)
@@ -741,7 +741,7 @@ void followLineForwards(int iterations)
 void turnIntoTunnel()
 {
     // Overshoot the tunnel
-    followLineForwards(10);
+    followLineForwards(15);
     // Turn into tunnel
     if (direction == CLOCKWISE)
     {
