@@ -27,13 +27,15 @@ bool atBlock = false;    // 0 for no block detected, 1 for block detected by pro
 bool blockAhead = false; // Block detected by IR
 bool complete2 = false;  // Completed second phase
 bool hitRED = false;
-bool movedRED = false;
+
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY FOR START UP)
 location_status location = HOME;          //Which section of the track we're in (SET TO HOME FOR START UP)
 direction_status direction = NONE;   //-1 for AC 1 for C. (SET TO NONE FOR START UP)
 output_status output;                     //Determines what the robot does at each timestep
 redPosition_status redPosition = BOTH_RIGHT_BEFORE_DELIVERY;  // Position of red blocks to start
+sequence1 seq1 = NA1;
+sequence2 seq2 = NA2;
 
 void setup()
 {

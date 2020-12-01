@@ -13,9 +13,8 @@ extern int _R;            //Variable to tell us if we have already come across a
 extern bool atBlock;      //If there is a block in our open arms
 extern bool blockAhead;   //If there is a block in front of our arms
 extern bool complete2;    //To aid in phase swap between 2 and 3
-
 extern bool hitRED;
-extern bool movedRED;
+
 
 enum redPosition_status
 {
@@ -26,6 +25,26 @@ enum redPosition_status
     UNKNOWN,
 };
 extern redPosition_status redPosition;
+
+enum sequence1
+{
+    doublered, //11
+    blue, //0
+    redblue, //10
+    NA1,
+};
+extern sequence1 seq1;
+
+enum sequence2
+{
+    Doublered, //11
+    Blue, //0
+    Redblue, //10
+    NA2,
+};
+extern sequence2 seq2;
+
+
 
 // Current block in grabber
 enum currentBlock_status
@@ -58,4 +77,6 @@ extern location_status location;
 // void pidGetAtJunction(); // New junction detection with pid
 void getAtJunction();
 void getUntilJunc();
+int returnlocation();
+redPosition_status definepos();
 #endif

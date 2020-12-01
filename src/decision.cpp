@@ -81,10 +81,32 @@ output_status makeDecision()
                     {
                         lf4s();
                     }
-                    grabBlock(false);//Pick up block
+                    grabBlock(false); //Pick up block
                     delay(500);
                     if (colour1read() == false) //if its blue
                     {
+                        if (numB == 0)
+                        {
+                            if (_R == 1)
+                            {
+                                seq1 = redblue;
+                            }
+                            else
+                            {
+                                seq1 = blue;
+                            }
+                        }
+                        else
+                        {
+                            if (_R == 1)
+                            {
+                                seq2 = Redblue;
+                            }
+                            else
+                            {
+                                seq2 = Blue;
+                            }
+                        }
                         //Serial.println("Phase 2: Identify blue block");
                         currentBlock = BLUE;
                         updateLights(true);
@@ -110,9 +132,9 @@ output_status makeDecision()
                     }
                     else if (colour1read() == true && _R == 0) //if its red and you havent already hit a red block
                     {
+
                         //Serial.println("Phase 2: Identify red block");
                         currentBlock = RED;
-                        hitRED = true;
                         updateLights(false);
                         delay(1000);
                         openMechanism(); //release the block
@@ -138,14 +160,20 @@ output_status makeDecision()
                         untilJunction = 2 - untilJunction;
                         return FOLLOW_LINE;
                     }
-
                     else if (colour1read() == true && _R == 1) //if the block is red and you already encountered a red block
                     {
+                        if (numB == 0)
+                        {
+                            seq1 = doublered;
+                        }
+                        else
+                        {
+                            seq2 = Doublered;
+                        }
                         //Serial.println("Phase 2: Identify 2nd red block");
                         currentBlock = RED; //pick it up
                         updateLights(false);
                         delay(1000);
-                        movedRED = true;
                         updateLights(true);
                         for (int i = 0; i < 10; i++)
                         {
@@ -311,48 +339,47 @@ output_status makeDecision()
         }
         else if (location == BLUE_DELIVERY)
         {
-            if (currentBlock == BLUE) //entering Blue area with blue Block
+
+            if (!atJunction)
             {
-                if (!atJunction)
-                {
-                    return FOLLOW_LINE;
-                }
-                else if (numB == 0)
-                {
-                    deliverBlue1();
-                }
-                else if (numB == 1)
-                {
-                    deliverBlue2();
-                    numB = 2;
-                }
-                moveUntilJunction();
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000);
-                spin(LEFT);
-                moveUntilJunction();
-                ML->setSpeed(power);
-                MR->setSpeed(power);
-                delay(2000);
-                if (redPosition == BOTH_RIGHT_BEFORE_DELIVERY && numB < 2)
-                {
-                    spin(LEFT);
-                    direction = CLOCKWISE;
-                }
-                else
-                {
-                    spin(RIGHT);
-                    direction = ANTICLOCKWISE;
-                }
-                if (complete2 == true)
-                {
-                    numB = 2;
-                }
-                _R = 0;
-                location = LOOP;
                 return FOLLOW_LINE;
             }
+            else if (numB == 0)
+            {
+                deliverBlue1();
+                numB = 1;
+            }
+            else if (numB == 1)
+            {
+                deliverBlue2();
+                numB = 2;
+            }
+            moveUntilJunction();
+            ML->setSpeed(power);
+            MR->setSpeed(power);
+            delay(2000);
+            spin(LEFT);
+            moveUntilJunction();
+            ML->setSpeed(power);
+            MR->setSpeed(power);
+            delay(2000);
+            if (seq1 == doublered && numB < 2)
+            {
+                spin(LEFT);
+                direction = CLOCKWISE;
+            }
+            else
+            {
+                spin(RIGHT);
+                direction = ANTICLOCKWISE;
+            }
+            if (numB == 2)
+            {
+                redPosition = definepos();
+            }
+            _R = 0;
+            location = LOOP;
+            return FOLLOW_LINE;
         }
     }
     else if (phase == 3)
@@ -456,7 +483,7 @@ output_status makeDecision()
             // Position it on target
             spinToggleJunction();
             moveUntilJunction();
-            skipJunc(); // skip delivery target to get to the correct side
+            skipJunc();             // skip delivery target to get to the correct side
             followLineForwards(30); // overshoot target
             spinToggleJunction();
             moveUntilJunction(); // move to target
@@ -469,7 +496,7 @@ output_status makeDecision()
             skipJunc(); // skip T junction
             moveUntilBlock();
             grabBlock(true);
-            
+
             // Position it on target
             moveUntilJunction();
             releaseBlock();
@@ -645,19 +672,19 @@ void turnIntoTunnel()
     // Turn into tunnel
     if (direction == CLOCKWISE)
     {
-        ML-> run(BACKWARD);
-        ML ->setSpeed(power);
-        MR -> run(FORWARD);
-        MR -> setSpeed(power);
+        ML->run(BACKWARD);
+        ML->setSpeed(power);
+        MR->run(FORWARD);
+        MR->setSpeed(power);
         delay(1000);
         spin(LEFT);
     }
     else
     {
-        ML-> run(FORWARD);
-        ML ->setSpeed(power);
-        MR -> run(BACKWARD);
-        MR -> setSpeed(power);
+        ML->run(FORWARD);
+        ML->setSpeed(power);
+        MR->run(BACKWARD);
+        MR->setSpeed(power);
         delay(1000);
         spin(RIGHT);
     }

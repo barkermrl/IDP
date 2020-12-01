@@ -4,7 +4,7 @@
 #include "line_following.h"
 
 int threshold = 50; // max power_difference value when robot is still on straight
-bool on_straight; // true if the robot is going straight
+bool on_straight;   // true if the robot is going straight
 bool outer_on_line; // true if either of the outer sensors are on the line
 
 //State functions that contains all state variables
@@ -57,4 +57,38 @@ void getAtJunction_dummy()
 void getUntilJunc()
 {
     untilJunction = 2 - untilJunction;
+}
+
+redPosition_status definepos()
+{
+    if (seq1 == doublered)
+    {
+        return BOTH_RIGHT_BEFORE_DELIVERY;//1
+    }
+    else if (seq1 == blue)
+    {
+        if (seq2 == Doublered)
+        {
+            return BOTH_RIGHT;//3
+        }
+        else if (seq2 == Blue)
+        {
+            return BOTH_LEFT;//2
+        }
+        else
+        {
+            return BOTH_TOP;//4
+        }
+    }
+    else if (seq1 == redblue)
+    {
+        if (seq2 == Doublered)
+        {
+            return BOTH_RIGHT_BEFORE_DELIVERY;//1
+        }
+        else 
+        {
+            return BOTH_RIGHT; //3
+        }
+    }
 }
