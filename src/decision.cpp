@@ -449,12 +449,14 @@ output_status makeDecision()
         {
             // Spin and move to the other side of the junction
             spinToggleJunction();
+            untilJunction = 2;
             // moveUntilJunction();
             // skipJunc(); // skip T junction
 
             // Get first red block and deliver it
             moveUntilBlock();
             grabBlock(true);
+            followLineForwards(30);
             spinToggleJunction();
             moveUntilJunction();
             skipJunc(); // T junction
@@ -620,6 +622,7 @@ void spinToggleJunction()
 
 void grabBlock(bool moving)
 {
+    delay(1000);
     ML->setSpeed(0);
     MR->setSpeed(0);
     updateLights(moving);
