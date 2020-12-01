@@ -71,18 +71,18 @@ void loop()
     // output = TEST;
     if (output == FOLLOW_LINE)
     {
-        lf4s();
+        lf4s(true);
         updateLights(true);
     }
     else if (output == SPIN_L)
     {
         spin(LEFT);
-        lf4s();
+        lf4s(true);
     }
     else if (output == SPIN_R)
     {
         spin(RIGHT);
-        lf4s();
+        lf4s(true);
     }
     else if (output == STOP)
     {
@@ -109,7 +109,7 @@ void loop()
         closeMechanism();
         while (!atJunction)
         {
-            lf4s();
+            lf4s(true);
             getAtJunction();
         }
         deliverBlue1();
@@ -118,7 +118,7 @@ void loop()
     else
     {
         // By default continue following the line
-        lf4s();
+        lf4s(true);
         updateLights(true);
 
     }

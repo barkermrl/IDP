@@ -79,7 +79,7 @@ output_status makeDecision()
                 {
                     for (int i = 0; i <= 6; i++)
                     {
-                        lf4s();
+                        lf4s(false);
                     }
                     grabBlock(false); //Pick up block
                     delay(500);
@@ -113,7 +113,7 @@ output_status makeDecision()
                         delay(1000);
                         for (int i = 0; i < 30; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         if (direction == CLOCKWISE) //Spin
                         {
@@ -177,7 +177,7 @@ output_status makeDecision()
                         updateLights(true);
                         for (int i = 0; i < 10; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         if (direction == CLOCKWISE) //spin
                         {
@@ -234,7 +234,7 @@ output_status makeDecision()
                     {
                         for (int i = 0; i <= 30; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         ML->setSpeed(0);
                         MR->setSpeed(0);
@@ -649,7 +649,7 @@ void moveUntilBlock()
     getAtblock();
     while (!atBlock)
     {
-        lf4s();
+        lf4s(true);
         getAtblock();
     }
 }
@@ -659,7 +659,7 @@ void moveUntilJunction()
     getAtJunction();
     while (!atJunction)
     {
-        lf4s();
+        lf4s(true);
         getAtJunction();
     }
 }
@@ -668,7 +668,7 @@ void followLineForwards(int iterations)
 {
     for (int i = 0; i < iterations; i++)
     {
-        lf4s();
+        lf4s(true);
     }
 }
 

@@ -15,13 +15,16 @@ int error; // Error based on line sensor readings
 int last_error; // Variable to store the previous error (for derivative)
 int power_difference; // Term to correct the power
 
+int integral_threshold = 10;
+int speed_boost = 70;
+
 void resetID()
 {
     integral = 0;
     last_error = 0;
 }
 
-void lf4s()
+void lf4s(bool boost)
 {
     // Function to implement pid control for line following.
     // Largely based on the post here: https://medium.com/@TowardInfinity/pid-for-line-follower-11deb3a1a643
@@ -32,6 +35,11 @@ void lf4s()
     // 1. Calculate error first based on the 2 central line sensors
     // Note error is positive when the robot is to the right of the line,
     // and negative when the robot is to the left of the line.
+
+    if (boost and integral < integral_threshold)
+    {
+        power += speed_boost;
+    }
 
     // If the left or left middle sensor is on the line, robot is too far to the right.
     if (LOnLine()) {
@@ -68,8 +76,15 @@ void lf4s()
     // 5. Update speeds of the motors
     pidUpdateSpeed();
 
-    // Wait for a bit
+    if (boost and integral < integral_threshold)
+    {
+        power -= speed_boost;
+        delay(60);
+    }
+    else {
+        // Wait for a bit
     delay(100);
+    }
 
     // Print out for debugging
     // Serial.print(int(error*Kp));
@@ -298,7 +313,7 @@ void skipJunc()
                 }
                 delay(1200);
                 spin(LEFT);
-                lf4s();
+                lf4s(false);
             }
             else
             {
@@ -308,7 +323,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                lf4s();
+                lf4s(false);
             }
         }
         else if (untilJunction == 1)
@@ -322,7 +337,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                lf4s();
+                lf4s(false);
             }
             else if (direction == CLOCKWISE)
             {
@@ -334,7 +349,7 @@ void skipJunc()
                 }
                 delay(1200);
                 spin(RIGHT);
-                lf4s();
+                lf4s(false);
             }
         }
         else if (untilJunction == 0)
