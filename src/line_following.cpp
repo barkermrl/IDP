@@ -6,7 +6,7 @@
 #define turnThresh 200
 
 // Control variables for pid loop
-float Kp = 100; // For proportional control
+float Kp = 75; // For proportional control
 float Ki = 0; // For integral control
 float Kd = 0; // For derivative control
 int derivative; // Derivative component of the correction
@@ -305,6 +305,8 @@ void skipJunc()
             untilJunction = untilJunction - 1;
             if (direction == ANTICLOCKWISE)
             {
+                MR->run(FORWARD);
+                ML->run(FORWARD);
                 MR->setSpeed(power-30);
                 ML->setSpeed(power+30);
                 while (atJunction)
@@ -341,6 +343,8 @@ void skipJunc()
             }
             else if (direction == CLOCKWISE)
             {
+                MR->run(FORWARD);
+                ML->run(FORWARD);
                 MR->setSpeed(power +30);
                 ML->setSpeed(power-30);
                 while (atJunction)

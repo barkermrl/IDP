@@ -142,7 +142,7 @@ output_status makeDecision()
                         openMechanism(); //release the block
                         currentBlock = EMPTY;
                         updateLights(true);
-                        
+
                         _R = 1; //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
@@ -385,6 +385,7 @@ output_status makeDecision()
             }
             _R = 0;
             location = LOOP;
+            untilJunction = 2;
             return FOLLOW_LINE;
         }
     }
@@ -493,7 +494,7 @@ output_status makeDecision()
             spinToggleJunction();
             moveUntilJunction();
             skipJunc();             // skip delivery target to get to the correct side
-            followLineForwards(30); // overshoot target
+            followLineForwards(200); // overshoot target
             spinToggleJunction();
             moveUntilJunction(); // move to target
             releaseBlock();
@@ -678,7 +679,11 @@ void followLineForwards(int iterations)
 void turnIntoTunnel()
 {
     // Overshoot the tunnel
-    followLineForwards(15);
+    ML->run(FORWARD);
+    MR->run(FORWARD);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+    delay(1400);
     // Turn into tunnel
     if (direction == CLOCKWISE)
     {
