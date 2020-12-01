@@ -6,16 +6,17 @@
 #define turnThresh 200
 
 // Control variables for pid loop
-float Kp = 10; // For proportional control
-float Ki = 10; // For integral control
-float Kd = 5; // For derivative control
+float Kp = 100; // For proportional control
+float Ki = 0; // For integral control
+float Kd = 0; // For derivative control
 int derivative; // Derivative component of the correction
 int integral; // Integral component of the correction
 int error; // Error based on line sensor readings
 int last_error; // Variable to store the previous error (for derivative)
 int power_difference; // Term to correct the power
 
-int integral_threshold = 10;
+int integral_threshold = 5;
+int power_difference_threshold = 10;
 int speed_boost = 70;
 
 void resetID()
@@ -35,11 +36,6 @@ void lf4s(bool boost)
     // 1. Calculate error first based on the 2 central line sensors
     // Note error is positive when the robot is to the right of the line,
     // and negative when the robot is to the left of the line.
-
-    if (boost and integral < integral_threshold)
-    {
-        power += speed_boost;
-    }
 
     // If the left or left middle sensor is on the line, robot is too far to the right.
     if (LOnLine()) {
@@ -73,17 +69,21 @@ void lf4s(bool boost)
     // 4. Calculate the power_difference correction (power difference is large if robot is too far to the right).
     power_difference = int(error*Kp + integral*Ki + derivative*Kd);
 
+    if (boost)
+    {
+        power += speed_boost;
+    }
+
     // 5. Update speeds of the motors
     pidUpdateSpeed();
 
-    if (boost and integral < integral_threshold)
+    if (boost)
     {
         power -= speed_boost;
-        delay(60);
+        delay(20);
     }
     else {
-        // Wait for a bit
-    delay(100);
+        delay(100);
     }
 
     // Print out for debugging

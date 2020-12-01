@@ -15,7 +15,7 @@ int power = 120;       //average speed of motors
 dir_status dir = L; //1 corresponds to left, -1 to right
 
 // Defining state variables
-int numB = 2; //number of blue targets delivered
+int numB = 0; //number of blue targets delivered
 int numR = 0; //number of red targets delivered
 
 
@@ -66,9 +66,9 @@ void loop()
     getAtblock();
     getAtJunction();
     // Get output from the decision making process
-    output = makeDecision();
+     output = makeDecision();
     // Switch case to call the correct output
-    // output = TEST;
+   // output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s(true);
@@ -104,16 +104,11 @@ void loop()
     }
     else if (output == TEST)
     {
-        ML->setSpeed(0);
-        MR->setSpeed(0);
-        closeMechanism();
         while (!atJunction)
         {
             lf4s(true);
             getAtJunction();
         }
-        deliverBlue1();
-        while (true){};
     }
     else
     {

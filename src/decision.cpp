@@ -135,11 +135,14 @@ output_status makeDecision()
 
                         //Serial.println("Phase 2: Identify red block");
                         currentBlock = RED;
-                        updateLights(false);
-                        delay(1000);
+                        updateLights(true);
+                        followLineForwards(20);
+                        ML ->setSpeed(0);
+                        MR->setSpeed(0);
                         openMechanism(); //release the block
                         currentBlock = EMPTY;
                         updateLights(true);
+                        
                         _R = 1; //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
