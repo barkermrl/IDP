@@ -106,6 +106,11 @@ void deliverBlue2()
     reverse(1000);
     // Spin left
     spin(LEFT);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+    delay(2000);
+    spin(LEFT);
+
 }
 
 void deliverBlue1()

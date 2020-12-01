@@ -85,7 +85,7 @@ output_status makeDecision()
                     delay(500);
                     if (colour1read() == false) //if its blue
                     {
-                        if (numB == 0)
+                        if (numB == 0 && seq1 == NA1)
                         {
                             if (_R == 1)
                             {
@@ -96,7 +96,7 @@ output_status makeDecision()
                                 seq1 = blue;
                             }
                         }
-                        else
+                        else if (seq2 == NA2)
                         {
                             if (_R == 1)
                             {
@@ -111,7 +111,7 @@ output_status makeDecision()
                         currentBlock = BLUE;
                         updateLights(true);
                         delay(1000);
-                        for (int i = 0; i < 20; i++)
+                        for (int i = 0; i < 30; i++)
                         {
                             lf4s();
                         }
@@ -365,6 +365,9 @@ output_status makeDecision()
             delay(2000);
             if (seq1 == doublered && numB < 2)
             {
+                ML ->setSpeed(0);
+                MR ->setSpeed(0);
+                delay(2000);
                 spin(LEFT);
                 direction = CLOCKWISE;
             }
