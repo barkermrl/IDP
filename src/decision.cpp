@@ -433,10 +433,11 @@ output_status makeDecision()
 
             // Grab block and deliver it
             grabBlock(true);
+            followLineForwards(20);
             spinToggleJunction();
             moveUntilJunction();
             skipJunc(); // skip delivery target
-            followLineForwards(30);
+            followLineForwards(60);
             spinToggleJunction(); // spin around to orientate with target
             moveUntilJunction();
             releaseBlock();
@@ -640,7 +641,7 @@ void releaseBlock()
     MR->run(BACKWARD);
     ML->setSpeed(power);
     MR->setSpeed(power);
-    delay(1000);
+    delay(1200);
 }
 
 void moveUntilBlock()

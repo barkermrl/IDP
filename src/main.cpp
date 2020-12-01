@@ -15,7 +15,7 @@ int power = 120;       //average speed of motors
 dir_status dir = L; //1 corresponds to left, -1 to right
 
 // Defining state variables
-int numB = 1; //number of blue targets delivered
+int numB = 2; //number of blue targets delivered
 int numR = 0; //number of red targets delivered
 
 
@@ -28,17 +28,17 @@ bool blockAhead = false; // Block detected by IR
 bool complete2 = false;  // Completed second phase
 bool hitRED = false;
 
-int start = 0;           //a variable that calls for the start/end sequence
-int untilJunction = 2;   //number of "junction detections" until we actually hit a junction (SET TO 0 FOR START UP)
-location_status location = LOOP;          //Which section of the track we're in (SET TO HOME FOR START UP)
-direction_status direction = ANTICLOCKWISE;   //-1 for AC 1 for C. (SET TO NONE FOR START UP)
+int start = 1;           //a variable that calls for the start/end sequence (SET TO 1 FOR START)
+int untilJunction = 0;   //number of "junction detections" until we actually hit a junction (SET TO 0 FOR START UP)
+location_status location = HOME;          //Which section of the track we're in (SET TO HOME FOR START UP)
+direction_status direction = NONE;   //-1 for AC 1 for C. (SET TO NONE FOR START UP)
 
 
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY FOR START UP)
 
 output_status output;                     //Determines what the robot does at each timestep
 redPosition_status redPosition = UNKNOWN;  // Position of red blocks to start
-sequence1 seq1 = redblue;
+sequence1 seq1 = NA1;
 sequence2 seq2 = NA2;
 
 void setup()
