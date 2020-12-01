@@ -290,13 +290,13 @@ void skipJunc()
             untilJunction = untilJunction - 1;
             if (direction == ANTICLOCKWISE)
             {
-                MR->setSpeed(power);
-                ML->setSpeed(power);
+                MR->setSpeed(power-30);
+                ML->setSpeed(power+30);
                 while (atJunction)
                 {
                     getAtJunction();
                 }
-                delay(1700);
+                delay(1200);
                 spin(LEFT);
                 lf4s();
             }
@@ -326,13 +326,13 @@ void skipJunc()
             }
             else if (direction == CLOCKWISE)
             {
-                MR->setSpeed(power);
-                ML->setSpeed(power);
+                MR->setSpeed(power +30);
+                ML->setSpeed(power-30);
                 while (atJunction)
                 {
                     getAtJunction();
                 }
-                delay(1700);
+                delay(1200);
                 spin(RIGHT);
                 lf4s();
             }

@@ -449,8 +449,8 @@ output_status makeDecision()
         {
             // Spin and move to the other side of the junction
             spinToggleJunction();
-            moveUntilJunction();
-            skipJunc(); // skip T junction
+            // moveUntilJunction();
+            // skipJunc(); // skip T junction
 
             // Get first red block and deliver it
             moveUntilBlock();
