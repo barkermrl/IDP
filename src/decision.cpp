@@ -79,7 +79,7 @@ output_status makeDecision()
                 {
                     for (int i = 0; i <= 6; i++)
                     {
-                        lf4s();
+                        lf4s(false);
                     }
                     grabBlock(false); //Pick up block
                     delay(500);
@@ -113,7 +113,7 @@ output_status makeDecision()
                         delay(1000);
                         for (int i = 0; i < 30; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         if (direction == CLOCKWISE) //Spin
                         {
@@ -135,11 +135,14 @@ output_status makeDecision()
 
                         //Serial.println("Phase 2: Identify red block");
                         currentBlock = RED;
-                        updateLights(false);
-                        delay(1000);
+                        updateLights(true);
+                        followLineForwards(20);
+                        ML ->setSpeed(0);
+                        MR->setSpeed(0);
                         openMechanism(); //release the block
                         currentBlock = EMPTY;
                         updateLights(true);
+
                         _R = 1; //to pick up and move the next red block we hit
                         ML->run(BACKWARD);
                         MR->run(BACKWARD);
@@ -177,7 +180,7 @@ output_status makeDecision()
                         updateLights(true);
                         for (int i = 0; i < 10; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         if (direction == CLOCKWISE) //spin
                         {
@@ -234,7 +237,7 @@ output_status makeDecision()
                     {
                         for (int i = 0; i <= 30; i++)
                         {
-                            lf4s();
+                            lf4s(false);
                         }
                         ML->setSpeed(0);
                         MR->setSpeed(0);
@@ -382,6 +385,7 @@ output_status makeDecision()
             }
             _R = 0;
             location = LOOP;
+            untilJunction = 2;
             return FOLLOW_LINE;
         }
     }
@@ -433,10 +437,11 @@ output_status makeDecision()
 
             // Grab block and deliver it
             grabBlock(true);
+            followLineForwards(20);
             spinToggleJunction();
             moveUntilJunction();
             skipJunc(); // skip delivery target
-            followLineForwards(30);
+            followLineForwards(60);
             spinToggleJunction(); // spin around to orientate with target
             moveUntilJunction();
             releaseBlock();
@@ -489,7 +494,7 @@ output_status makeDecision()
             spinToggleJunction();
             moveUntilJunction();
             skipJunc();             // skip delivery target to get to the correct side
-            followLineForwards(30); // overshoot target
+            followLineForwards(200); // overshoot target
             spinToggleJunction();
             moveUntilJunction(); // move to target
             releaseBlock();
@@ -640,7 +645,7 @@ void releaseBlock()
     MR->run(BACKWARD);
     ML->setSpeed(power);
     MR->setSpeed(power);
-    delay(1000);
+    delay(1200);
 }
 
 void moveUntilBlock()
@@ -648,7 +653,7 @@ void moveUntilBlock()
     getAtblock();
     while (!atBlock)
     {
-        lf4s();
+        lf4s(true);
         getAtblock();
     }
 }
@@ -658,7 +663,7 @@ void moveUntilJunction()
     getAtJunction();
     while (!atJunction)
     {
-        lf4s();
+        lf4s(true);
         getAtJunction();
     }
 }
@@ -667,14 +672,18 @@ void followLineForwards(int iterations)
 {
     for (int i = 0; i < iterations; i++)
     {
-        lf4s();
+        lf4s(true);
     }
 }
 
 void turnIntoTunnel()
 {
     // Overshoot the tunnel
-    followLineForwards(15);
+    ML->run(FORWARD);
+    MR->run(FORWARD);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+    delay(1400);
     // Turn into tunnel
     if (direction == CLOCKWISE)
     {

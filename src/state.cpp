@@ -13,7 +13,24 @@ void getAtJunction()
     // Checks if the robot is going straight (for T-junctions)
     // i.e. the magnitude of power_difference is less than threshold
     on_straight = power_difference > -threshold and power_difference < threshold;
-    outer_on_line = ROnLine() or LOnLine();
+    if (location == LOOP)
+    {
+        if (direction == ANTICLOCKWISE)
+        {
+            outer_on_line = ROnLine();
+        }
+        else
+        {
+            outer_on_line = LOnLine();
+        }
+        
+    }
+    else
+    {
+        outer_on_line = ROnLine() or LOnLine();
+    }
+    
+    
 
     if (on_straight and outer_on_line)
     {

@@ -1,7 +1,7 @@
 #ifndef LS_H
 #define LS_H
 
-void lf4s();
+void lf4s(bool boost);
 void toggleDir();
 void skipJunc();
 void lf4s_dummy();

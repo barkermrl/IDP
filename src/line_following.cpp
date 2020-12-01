@@ -6,14 +6,18 @@
 #define turnThresh 200
 
 // Control variables for pid loop
-float Kp = 10; // For proportional control
-float Ki = 10; // For integral control
-float Kd = 5; // For derivative control
+float Kp = 75; // For proportional control
+float Ki = 0; // For integral control
+float Kd = 0; // For derivative control
 int derivative; // Derivative component of the correction
 int integral; // Integral component of the correction
 int error; // Error based on line sensor readings
 int last_error; // Variable to store the previous error (for derivative)
 int power_difference; // Term to correct the power
+
+int integral_threshold = 5;
+int power_difference_threshold = 10;
+int speed_boost = 70;
 
 void resetID()
 {
@@ -21,7 +25,7 @@ void resetID()
     last_error = 0;
 }
 
-void lf4s()
+void lf4s(bool boost)
 {
     // Function to implement pid control for line following.
     // Largely based on the post here: https://medium.com/@TowardInfinity/pid-for-line-follower-11deb3a1a643
@@ -65,11 +69,22 @@ void lf4s()
     // 4. Calculate the power_difference correction (power difference is large if robot is too far to the right).
     power_difference = int(error*Kp + integral*Ki + derivative*Kd);
 
+    if (boost)
+    {
+        power += speed_boost;
+    }
+
     // 5. Update speeds of the motors
     pidUpdateSpeed();
 
-    // Wait for a bit
-    delay(100);
+    if (boost)
+    {
+        power -= speed_boost;
+        delay(20);
+    }
+    else {
+        delay(100);
+    }
 
     // Print out for debugging
     // Serial.print(int(error*Kp));
@@ -290,6 +305,8 @@ void skipJunc()
             untilJunction = untilJunction - 1;
             if (direction == ANTICLOCKWISE)
             {
+                MR->run(FORWARD);
+                ML->run(FORWARD);
                 MR->setSpeed(power-30);
                 ML->setSpeed(power+30);
                 while (atJunction)
@@ -298,7 +315,7 @@ void skipJunc()
                 }
                 delay(1200);
                 spin(LEFT);
-                lf4s();
+                lf4s(false);
             }
             else
             {
@@ -308,7 +325,7 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                lf4s();
+                lf4s(false);
             }
         }
         else if (untilJunction == 1)
@@ -322,10 +339,12 @@ void skipJunc()
                 {
                     getAtJunction();
                 }
-                lf4s();
+                lf4s(false);
             }
             else if (direction == CLOCKWISE)
             {
+                MR->run(FORWARD);
+                ML->run(FORWARD);
                 MR->setSpeed(power +30);
                 ML->setSpeed(power-30);
                 while (atJunction)
@@ -334,7 +353,7 @@ void skipJunc()
                 }
                 delay(1200);
                 spin(RIGHT);
-                lf4s();
+                lf4s(false);
             }
         }
         else if (untilJunction == 0)

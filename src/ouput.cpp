@@ -131,7 +131,7 @@ void deliverBlue1()
     getAtJunction();
     while (!atJunction)
     {
-        lf4s();
+        lf4s(false);
         getAtJunction();
     }
     //stop and drop the block
