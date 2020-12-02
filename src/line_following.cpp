@@ -6,7 +6,7 @@
 #define turnThresh 200
 
 // Control variables for pid loop
-float Kp = 75; // For proportional control
+float Kp = 100; // For proportional control
 float Ki = 0; // For integral control
 float Kd = 0; // For derivative control
 int derivative; // Derivative component of the correction
@@ -17,7 +17,7 @@ int power_difference; // Term to correct the power
 
 int integral_threshold = 5;
 int power_difference_threshold = 10;
-int speed_boost = 70;
+int speed_boost = 100;
 
 void resetID()
 {

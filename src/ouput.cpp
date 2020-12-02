@@ -83,7 +83,7 @@ void deliverBlue2()
     // Overshoot BLue area T junction.
     ML->setSpeed(power); 
     MR->setSpeed(power);
-    delay(2000);
+    delay(2500);
     // Spin left to correct bearing.
     spin(LEFT);
     // Spin Left a bit more to line up block
@@ -106,6 +106,11 @@ void deliverBlue2()
     // Reverse back out
     reverse(1000);
     // Spin left
+    ML->run(BACKWARD);
+    MR->run(FORWARD);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+    delay(500);
     spin(LEFT);
     ML->setSpeed(power);
     MR->setSpeed(power);

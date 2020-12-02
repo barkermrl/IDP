@@ -437,11 +437,11 @@ output_status makeDecision()
 
             // Grab block and deliver it
             grabBlock(true);
-            followLineForwards(20);
+            followLineForwards(90);
             spinToggleJunction();
             moveUntilJunction();
             skipJunc(); // skip delivery target
-            followLineForwards(60);
+            followLineForwards(120);
             spinToggleJunction(); // spin around to orientate with target
             moveUntilJunction();
             releaseBlock();
@@ -627,25 +627,37 @@ void spinToggleJunction()
 
 void grabBlock(bool moving)
 {
-    delay(1000);
+    followLineForwards(5);
     ML->setSpeed(0);
     MR->setSpeed(0);
+    currentBlock = RED;
     updateLights(moving);
     closeMechanism();
 }
 
 void releaseBlock()
 {
+    // ML->setSpeed(0);
+    // MR->setSpeed(0);
+    // openMechanism();
+    // currentBlock = EMPTY;
+    // updateLights(true);
+    // ML->run(BACKWARD);
+    // MR->run(BACKWARD);
+    // ML->setSpeed(power);
+    // MR->setSpeed(power);
+    // delay(1200);
     ML->setSpeed(0);
     MR->setSpeed(0);
+    delay(500);
+    reverse(200);
+    delay(500);
     openMechanism();
     currentBlock = EMPTY;
     updateLights(true);
-    ML->run(BACKWARD);
-    MR->run(BACKWARD);
-    ML->setSpeed(power);
-    MR->setSpeed(power);
-    delay(1200);
+    delay(500);
+    reverse(1200);
+     
 }
 
 void moveUntilBlock()

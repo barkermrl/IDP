@@ -37,7 +37,7 @@ direction_status direction = NONE;   //-1 for AC 1 for C. (SET TO NONE FOR START
 currentBlock_status currentBlock = EMPTY; //Colour of block in grabber (or EMPTY FOR START UP)
 
 output_status output;                     //Determines what the robot does at each timestep
-redPosition_status redPosition = BOTH_TOP;  // Position of red blocks to start
+redPosition_status redPosition = UNKNOWN;  // Position of red blocks to start
 sequence1 seq1 = NA1;
 sequence2 seq2 = NA2;
 
@@ -66,9 +66,9 @@ void loop()
     getAtblock();
     getAtJunction();
     // Get output from the decision making process
-     //output = makeDecision();
+     output = makeDecision();
     // Switch case to call the correct output
-    output = TEST;
+    // output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s(true);
@@ -107,7 +107,8 @@ void loop()
         closeMechanism();
         delay(1000);
         moveUntilJunction();
-        deliverBlue1();
+        deliverBlue2();
+        while (true) {};
     }
     else
     {
