@@ -3,6 +3,7 @@
 #include "line_following.h"
 #include "state.h"
 #include "output.h"
+#include "decision.h"
 
 void spin(spin_direction_status spin_direction) //direction tells you wether or not you should spin to the right (-1) or to the left (+1)
 {
@@ -118,23 +119,30 @@ void deliverBlue1()
     //overshoot BLue area T junction
     ML->setSpeed(power); 
     MR->setSpeed(power);
-    delay(2000);
+    delay(2500);
     //Spin left
-    spin(LEFT);    
-    //overshoot first target      
+    spin(LEFT);
+    MR->run(FORWARD);
+    ML->run(BACKWARD);
+    ML->setSpeed(power);
+    MR->setSpeed(power);
+    delay(300);
+    ML->setSpeed(0);
+    MR->setSpeed(0);
+
+    //overshoot first target  
+    ML->run(FORWARD);
+    MR->run(FORWARD);    
     ML->setSpeed(power); 
     MR->setSpeed(power);
-    delay(2000);
+    delay(2500);
     //spin right onto straight to second target
     spin(RIGHT);
     // Keep going until you hit the junction
     getAtJunction();
-    while (!atJunction)
-    {
-        lf4s(false);
-        getAtJunction();
-    }
-    //stop and drop the block
+    moveUntilJunction();
+    //stop, reverse and drop the block
+    reverse(200);
     ML->setSpeed(0);
     MR->setSpeed(0);
     currentBlock = EMPTY;
@@ -143,6 +151,7 @@ void deliverBlue1()
     numB = 1;
     delay(2000);
     updateLights(true);
+
     // reverse back out
     ML->run(BACKWARD);
     MR->run(BACKWARD);

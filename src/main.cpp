@@ -66,9 +66,9 @@ void loop()
     getAtblock();
     getAtJunction();
     // Get output from the decision making process
-     output = makeDecision();
+     //output = makeDecision();
     // Switch case to call the correct output
-   // output = TEST;
+    output = TEST;
     if (output == FOLLOW_LINE)
     {
         lf4s(true);
@@ -104,11 +104,10 @@ void loop()
     }
     else if (output == TEST)
     {
-        while (!atJunction)
-        {
-            lf4s(true);
-            getAtJunction();
-        }
+        closeMechanism();
+        delay(1000);
+        moveUntilJunction();
+        deliverBlue1();
     }
     else
     {
