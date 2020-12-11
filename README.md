@@ -1,5 +1,5 @@
 # IDP
-This is the repository for the Independent Design Project 2020. Active developers are @barkermrl, @moonear2000 and @LukeJA.
+This is the repository for the Independent Design Project 2020, developed by @barkermrl, @moonear2000. This repository has now been archived after the final competition.
 
 ## Guide to Contributing
 Please branch off main when implementing a feature. Work on the branch locally, committing as needed. When the feature is complete, rebase off master (ensuring you fetch the latest version from origin) and submit a pull request to merge into main.
